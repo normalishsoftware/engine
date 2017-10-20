@@ -14,21 +14,51 @@ public:
 
 	float DotProduct(vec2 u, vec2 v) { return (u.x * v.x) + (u.y * v.y); }
 
-	friend vec2& operator+(const vec2& lhs, const vec2& rhs) { return vec2(lhs.x + rhs.x, lhs.y + rhs.y); }
-	friend vec2& operator-(const vec2& lhs, const vec2& rhs) { return vec2(lhs.x - rhs.x, lhs.y - rhs.y); }
-	friend vec2& operator*(const float num, const vec2& rhs) { return vec2(num * rhs.x, num * rhs.y); }
-	friend vec2& operator/(const float num, const vec2& rhs) { return vec2(num / rhs.x, num / rhs.y); }
-	friend vec2& operator+=(vec2& lhs, const vec2& rhs) { return lhs = lhs + rhs; }
-	friend vec2& operator-=(vec2& lhs, const vec2& rhs) { return lhs = lhs - rhs; }
-	friend vec2& operator*=(vec2& lhs, const float num) { return lhs = num * lhs; }
-	friend vec2& operator/=(vec2& lhs, const float num) { return lhs = num / lhs; }
-	friend bool operator==(const vec2& lhs, const vec2& rhs) { return ((lhs.x == rhs.x) && (lhs.y == rhs.y)) ? true : false; }
-	friend bool operator!=(const vec2& lhs, const vec2& rhs) { return ((lhs.x == rhs.x) && (lhs.y == rhs.y)) ? false : true; }
 	friend std::ostream& operator<<(std::ostream& stream, const vec2& in)
 	{
 		stream << "vec2: " << in.x << ' ' << in.y;
 		return stream;
 	}
+	friend bool operator==(const vec2& lhs, const vec2& rhs)
+	{
+		return ((lhs.x == rhs.x) && (lhs.y == rhs.y)) ? true : false;
+	}
+	friend bool operator!=(const vec2& lhs, const vec2& rhs)
+	{
+		return ((lhs.x == rhs.x) && (lhs.y == rhs.y)) ? false : true;
+	}
+	friend vec2& operator+(vec2& lhs, const vec2& rhs)
+	{
+		lhs.x += rhs.x;
+		lhs.y += rhs.y;
+
+		return lhs;
+	}
+	friend vec2& operator-(vec2& lhs, const vec2& rhs)
+	{
+		lhs.x -= rhs.x;
+		lhs.y -= rhs.y;
+
+		return lhs;
+	}
+	friend vec2& operator*(const float num, vec2& rhs)
+	{
+		rhs.x *= num;
+		rhs.y *= num;
+
+		return rhs;
+	}
+	friend vec2& operator/(const float num, vec2& rhs)
+	{
+		rhs.x /= num;
+		rhs.y /= num;
+
+		return rhs;
+	}
+	friend vec2& operator+=(vec2& lhs, const vec2& rhs) { return lhs = lhs + rhs; }
+	friend vec2& operator-=(vec2& lhs, const vec2& rhs) { return lhs = lhs - rhs; }
+	friend vec2& operator*=(vec2& lhs, const float num) { return lhs = num * lhs; }
+	friend vec2& operator/=(vec2& lhs, const float num) { return lhs = num / lhs; }
 
 public:
 	float x, y;
@@ -44,14 +74,11 @@ public:
 	float DotProduct(vec3 u, vec3 v) { return (u.x * v.x) + (u.y * v.y) + (u.z * v.z); }
 	vec3 CrossProduct(vec3 u, vec3 v) { return vec3(u.y * v.z - u.z * v.y, u.x * v.z - u.z * v.x, u.x * v.y - u.y * v.x); }
 	
-	friend vec3& operator+(const vec3& lhs, const vec3& rhs) { return vec3(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z); }
-	friend vec3& operator-(const vec3& lhs, const vec3& rhs) { return vec3(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z); }
-	friend vec3& operator*(const float num, const vec3& rhs) { return vec3(num * rhs.x, num * rhs.y, num * rhs.z); }
-	friend vec3& operator/(const float num, const vec3& rhs) { return vec3(num / rhs.x, num / rhs.y, num / rhs.z); }
-	friend vec3& operator+=(vec3& lhs, const vec3& rhs) { return lhs = lhs + rhs; }
-	friend vec3& operator-=(vec3& lhs, const vec3& rhs) { return lhs = lhs - rhs; }
-	friend vec3& operator*=(vec3& lhs, const float num) { return lhs = num * lhs; }
-	friend vec3& operator/=(vec3& lhs, const float num) { return lhs = num / lhs; }
+	friend std::ostream& operator<<(std::ostream& stream, const vec3& in)
+	{
+		stream << "vec3: " << in.x << ' ' << in.y << ' ' << in.z;
+		return stream;
+	}
 	friend bool operator==(const vec3& lhs, const vec3& rhs)
 	{
 		return ((lhs.x == rhs.x) && (lhs.y == rhs.y) && (lhs.z == rhs.z)) ? true : false;
@@ -60,11 +87,42 @@ public:
 	{
 		return ((lhs.x == rhs.x) && (lhs.y == rhs.y) && (lhs.z == rhs.z)) ? false : true;
 	}
-	friend std::ostream& operator<<(std::ostream& stream, const vec3& in)
+	friend vec3& operator+(vec3& lhs, const vec3& rhs)
 	{
-		stream << "vec3: " << in.x << ' ' << in.y << ' ' << in.z;
-		return stream;
+		lhs.x += rhs.x;
+		lhs.y += rhs.y;
+		lhs.z += rhs.z;
+
+		return lhs;
 	}
+	friend vec3& operator-(vec3& lhs, const vec3& rhs)
+	{
+		lhs.x -= rhs.x;
+		lhs.y -= rhs.y;
+		lhs.z -= rhs.z;
+
+		return lhs;
+	}
+	friend vec3& operator*(const float num, vec3& rhs)
+	{
+		rhs.x *= num;
+		rhs.y *= num;
+		rhs.z *= num;
+
+		return rhs;
+	}
+	friend vec3& operator/(const float num, vec3& rhs)
+	{
+		rhs.x /= num;
+		rhs.y /= num;
+		rhs.z /= num;
+
+		return rhs;
+	}
+	friend vec3& operator+=(vec3& lhs, const vec3& rhs) { return lhs = lhs + rhs; }
+	friend vec3& operator-=(vec3& lhs, const vec3& rhs) { return lhs = lhs - rhs; }
+	friend vec3& operator*=(vec3& lhs, const float num) { return lhs = num * lhs; }
+	friend vec3& operator/=(vec3& lhs, const float num) { return lhs = num / lhs; }
 
 public:
 	float x, y, z;
@@ -80,14 +138,11 @@ public:
 	// float DotProduct(vec3 u, vec3 v) { return (u.x * v.x) + (u.y * v.y) + (u.z * v.z); }
 	// vec3 CrossProduct(vec3 u, vec3 v) { return vec3(u.y * v.z - u.z * v.y, u.x * v.z - u.z * v.x, u.x * v.y - u.y * v.x); }
 
-	friend vec4& operator+(const vec4& lhs, const vec4& rhs) { return vec4(lhs.x + rhs.x, lhs.y + rhs.y, lhs.z + rhs.z, lhs.w + rhs.w); }
-	friend vec4& operator-(const vec4& lhs, const vec4& rhs) { return vec4(lhs.x - rhs.x, lhs.y - rhs.y, lhs.z - rhs.z, lhs.w - rhs.w); }
-	friend vec4& operator*(const float num, const vec4& rhs) { return vec4(num * rhs.x, num * rhs.y, num * rhs.z, num * rhs.w); }
-	friend vec4& operator/(const float num, const vec4& rhs) { return vec4(num / rhs.x, num / rhs.y, num / rhs.z, num / rhs.w); }
-	friend vec4& operator+=(vec4& lhs, const vec4& rhs) { return lhs = lhs + rhs; }
-	friend vec4& operator-=(vec4& lhs, const vec4& rhs) { return lhs = lhs - rhs; }
-	friend vec4& operator*=(vec4& lhs, const float num) { return lhs = num * lhs; }
-	friend vec4& operator/=(vec4& lhs, const float num) { return lhs = num / lhs; }
+	friend std::ostream& operator<<(std::ostream& stream, const vec4& in)
+	{
+		stream << "vec4: " << in.x << ' ' << in.y << ' ' << in.z << ' ' << in.w;
+		return stream;
+	}
 	friend bool operator==(const vec4& lhs, const vec4& rhs)
 	{
 		return ((lhs.x == rhs.x) && (lhs.y == rhs.y) && (lhs.z == rhs.z) && (lhs.w == rhs.w)) ? true : false;
@@ -96,11 +151,46 @@ public:
 	{
 		return ((lhs.x == rhs.x) && (lhs.y == rhs.y) && (lhs.z == rhs.z) && (lhs.w == rhs.w)) ? false : true;
 	}
-	friend std::ostream& operator<<(std::ostream& stream, const vec4& in)
+	friend vec4& operator+(vec4& lhs, const vec4& rhs)
 	{
-		stream << "vec4: " << in.x << ' ' << in.y << ' ' << in.z << ' ' << in.w;
-		return stream;
+		lhs.x += rhs.x;
+		lhs.y += rhs.y;
+		lhs.z += rhs.z;
+		lhs.w += rhs.w;
+
+		return lhs;
 	}
+	friend vec4& operator-(vec4& lhs, const vec4& rhs)
+	{
+		lhs.x -= rhs.x;
+		lhs.y -= rhs.y;
+		lhs.z -= rhs.z;
+		lhs.w -= rhs.w;
+
+		return lhs;
+	}
+	friend vec4& operator*(const float num, vec4& rhs)
+	{
+		rhs.x *= num;
+		rhs.y *= num;
+		rhs.z *= num;
+		rhs.w *= num;
+
+		return rhs;
+	}
+	friend vec4& operator/(const float num, vec4& rhs)
+	{
+		rhs.x /= num;
+		rhs.y /= num;
+		rhs.z /= num;
+		rhs.w /= num;
+
+		return rhs;
+	}
+	friend vec4& operator+=(vec4& lhs, const vec4& rhs) { return lhs = lhs + rhs; }
+	friend vec4& operator-=(vec4& lhs, const vec4& rhs) { return lhs = lhs - rhs; }
+	friend vec4& operator*=(vec4& lhs, const float num) { return lhs = num * lhs; }
+	friend vec4& operator/=(vec4& lhs, const float num) { return lhs = num / lhs; }
 
 public:
 	float x, y, z, w;
@@ -111,12 +201,12 @@ class mat4
 public:
 	mat4()
 	{
-		for (auto i : elements)
+		for (auto& i : elements)
 			i = 0.f;
 	}
 	mat4(float diagonal)
 	{
-		for (auto i : elements)
+		for (auto& i : elements)
 			i = 0.f;
 
 		elements[0] = diagonal;
@@ -124,7 +214,7 @@ public:
 		elements[10] = diagonal;
 		elements[15] = diagonal;
 	}
-	mat4 identity() { return mat4(1.f); }
+	static mat4 identity() { return mat4(1.f); }
 	static mat4 multiply(const mat4& lhs, const mat4& rhs)
 	{
 		mat4 ret;
@@ -227,8 +317,40 @@ public:
 		return ret;
 	}
 
-	friend mat4 operator*(const mat4& lhs, const mat4& rhs) { return mat4::multiply(lhs, rhs); }
+	friend std::ostream& operator<<(std::ostream& stream, const mat4& in)
+	{
+		stream << "mat4:\n" << in.elements[0] << '\t' << in.elements[4] << '\t' << in.elements[8] << '\t' << in.elements[12] << '\n' << in.elements[1] << '\t' << in.elements[5] << '\t' << in.elements[9] << '\t' << in.elements[13] << '\n' << in.elements[2] << '\t' << in.elements[6] << '\t' << in.elements[10] << '\t' << in.elements[14] << '\n' << in.elements[3] << '\t' << in.elements[7] << '\t' << in.elements[11] << '\t' << in.elements[15];
+
+		return stream;
+	}
+	friend mat4& operator+(mat4& lhs, const mat4& rhs)
+	{
+		for (int i = 0; i < 16; i++)
+		{
+			lhs.elements[i] += rhs.elements[i];
+		}
+		return lhs;
+	}
+	friend mat4& operator*(mat4& lhs, const mat4& rhs) { return lhs = mat4::multiply(lhs, rhs); }
 	friend mat4& operator*=(mat4& lhs, const mat4& rhs) { return lhs = mat4::multiply(lhs, rhs); }
+	friend bool operator==(const mat4& lhs, const mat4& rhs)
+	{
+		for (int i = 0; i < 16; i++)
+		{
+			if (lhs.elements[i] != rhs.elements[i])
+				return false;
+		}
+		return true;
+	}
+	friend bool operator!=(const mat4& lhs, const mat4& rhs)
+	{
+		for (int i = 0; i < 16; i++)
+		{
+			if (lhs.elements[i] != rhs.elements[i])
+				return true;
+		}
+		return false;
+	}
 
 public:
 	float elements[16];
@@ -286,13 +408,12 @@ uint32_t string_hash(const char* data, uint32_t data_length, const char* salt, u
 
 int main()
 {
-	GLFWwindow* window;
-
 	if (!glfwInit())
 	{
 		return -1;
 	}
 
+	GLFWwindow* window;
 	window = glfwCreateWindow(640, 480, "Hello World", nullptr, nullptr);
 	if (!window)
 	{
@@ -305,8 +426,6 @@ int main()
 	{
 		return -1;
 	}
-
-	std::cout << glGetString(GL_VERSION) << '\n';
 
 	float positions[] = { -0.5f, -0.5f,
 						   0.f, 0.5f,
