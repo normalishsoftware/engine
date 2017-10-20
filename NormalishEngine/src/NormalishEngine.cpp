@@ -306,6 +306,8 @@ int main()
 		return -1;
 	}
 
+	std::cout << glGetString(GL_VERSION) << '\n';
+
 	float positions[] = { -0.5f, -0.5f,
 						   0.f, 0.5f,
 						   0.5f, -0.5f };
