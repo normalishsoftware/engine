@@ -4,6 +4,10 @@
 #include <chrono>
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
+/// begin experimental
+#include <fstream>
+#include <string>
+/// end experimental
 
 class vec2
 {
@@ -408,6 +412,88 @@ uint32_t string_hash(const char* data, uint32_t data_length, const char* salt, u
 
 int main()
 {
+	/// begin experimental
+
+	// create a hash for the name of each variable you want to be able to hotswap
+	uint32_t health = 100;
+	uint32_t health_hash = string_hash("health", 7, "Normalish", 10);
+	float stamina = 32.2f;
+	uint32_t stamina_hash = string_hash("stamina", 8, "Normalish", 10);
+	uint32_t ammo = 100;
+	uint32_t ammo_hash = string_hash("ammo", 5, "Normalish", 10);
+
+	// print the values out
+	std::cout << health << '\n';
+	std::cout << stamina << '\n';
+	std::cout << ammo << '\n';
+
+	// command to update the vars, will probably be global
+	const char command[12] = "update vars";
+	uint32_t command_hash = string_hash(command, 12, "Normalish", 10);
+
+	// collect a command input
+	char _command[12];
+	std::cin.getline(_command, 12);
+	uint32_t _command_hash = string_hash(_command, 12, "Normalish", 10);
+
+	// if command is correct, load the file
+	if (command_hash == _command_hash)
+	{
+		std::string line;
+		std::ifstream file("hotreload.txt");
+		if (file.is_open())
+		{
+			uint32_t counter = 0;
+			while (std::getline(file, line))
+			{
+				uint32_t space = line.find(' ');
+				uint32_t space_hash = string_hash(line.substr(0, space).c_str(), space, "Normalish", 10);
+				switch (counter)
+				{
+				case 0:
+					if (space_hash == health_hash)
+					{
+						std::string value = line.substr(space);
+						float _value = std::stof(value);
+						health = _value;
+					}
+					break;
+				case 1:
+					if (space_hash == stamina_hash)
+					{
+						std::string value = line.substr(space);
+						float _value = std::stof(value);
+						stamina = _value;
+					}
+					break;
+				case 2:
+					if (space_hash == ammo_hash)
+					{
+						std::string value = line.substr(space);
+						float _value = std::stof(value);
+						ammo = _value;
+					}
+					break;
+				}
+				counter++;
+			}
+
+			// print the new values out
+			std::cout << health << '\n';
+			std::cout << stamina << '\n';
+			std::cout << ammo << '\n';
+		}
+		else
+		{
+			std::cout << "Error could not find file\n";
+		}
+	}
+	else
+	{
+		std::cout << "Failed to read file!\n";
+	}
+	/// end experimental
+
 	if (!glfwInit())
 	{
 		return -1;
