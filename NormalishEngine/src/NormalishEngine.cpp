@@ -77,6 +77,7 @@ public:
 
 	float DotProduct(vec3 u, vec3 v) { return (u.x * v.x) + (u.y * v.y) + (u.z * v.z); }
 	vec3 CrossProduct(vec3 u, vec3 v) { return vec3(u.y * v.z - u.z * v.y, u.x * v.z - u.z * v.x, u.x * v.y - u.y * v.x); }
+	float Magnitude(const vec3& in) { return sqrtf((in.x * in.x) + (in.y * in.y) + (in.z * in.z)); }
 	
 	friend std::ostream& operator<<(std::ostream& stream, const vec3& in)
 	{
@@ -368,8 +369,20 @@ public:
 	static const int32_t RoundDown(float in) { return static_cast<int32_t>(in); }
 	static const int32_t RoundUp(float in) { return static_cast<int32_t>(in + 1); }
 
-	// TODO - distance btwn vectors
-	// TODO - lerp
+	// TODO - distance between vectors
+
+	float Lerp(const float a, const float b, float alpha) { return (((1 - alpha) * a) + (alpha * b)); }
+	vec3 Lerp(const vec3& u, const vec3& v, float alpha)
+	{
+		float beta = (1 - alpha);
+		return vec3((beta * u.x) + (alpha * v.x), (beta * u.y) + (alpha * v.y), (beta * u.z) + (alpha * v.z));
+	}
+	vec4 Lerp(const vec4& u, const vec4& v, float alpha)
+	{
+		float beta = (1 - alpha);
+		return vec4((beta * u.x) + (alpha * v.x), (beta * u.y) + (alpha * v.y), (beta * u.z) + (alpha * v.z), (beta * u.w) + (alpha * v.w));
+	}
+
 	static const int32_t RandomInt(int32_t lower, int32_t upper)
 	{
 		std::mt19937 generator(std::chrono::system_clock::now().time_since_epoch().count());
