@@ -410,7 +410,7 @@ uint32_t string_hash(const char* data, uint32_t data_length, const char* salt, u
 	return hash;
 }
 
-int main()
+void HotReload()
 {
 	/// begin experimental
 
@@ -493,14 +493,58 @@ int main()
 		std::cout << "Failed to read file!\n";
 	}
 	/// end experimental
+}
 
+static uint32_t CompileShader(uint32_t type, const char* source)
+{
+	uint32_t id = glCreateShader(type);
+	glShaderSource(id, 1, &source, nullptr);
+	glCompileShader(id);
+
+	{
+		int32_t result;
+		glGetShaderiv(id, GL_COMPILE_STATUS, &result);
+		if (!result)
+		{
+			int32_t length;
+			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
+			char* error = static_cast<char*>(alloca(length * sizeof(char)));
+			glGetShaderInfoLog(id, length, &length, error);
+			std::cout << error << '\n';
+			glDeleteShader(id);
+			return 0;
+		}
+	}
+
+	return id;
+}
+
+static uint32_t CreateShader(const char* vertex_shader, const char* fragment_shader)
+{
+	uint32_t program = glCreateProgram();
+	uint32_t vs = CompileShader(GL_VERTEX_SHADER, vertex_shader);
+	uint32_t fs = CompileShader(GL_FRAGMENT_SHADER, fragment_shader);
+
+	glAttachShader(program, vs);
+	glAttachShader(program, fs);
+	glLinkProgram(program);
+	glValidateProgram(program);
+
+	glDeleteShader(vs);
+	glDeleteShader(fs);
+
+	return program;
+}
+
+int32_t main()
+{
 	if (!glfwInit())
 	{
 		return -1;
 	}
 
 	GLFWwindow* window;
-	window = glfwCreateWindow(640, 480, "Hello World", nullptr, nullptr);
+	window = glfwCreateWindow(640, 480, "Normalish", nullptr, nullptr);
 	if (!window)
 	{
 		glfwTerminate();
@@ -525,6 +569,23 @@ int main()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
 
+	const char* vertex_shader =
+		"#version 330 core\n"
+		"layout(location = 0) in vec4 position;\n"
+		"void main()\n"
+		"{\n"
+		"gl_Position = position;\n"
+		"}";
+	const char* fragment_shader =
+		"#version 330 core\n"
+		"layout(location = 0) out vec4 color;\n"
+		"void main()\n"
+		"{\n"
+		"color = vec4(1.f, 0.f, 0.f, 1.f);\n"
+		"}";
+	uint32_t shader = CreateShader(vertex_shader, fragment_shader);
+	glUseProgram(shader);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -533,6 +594,8 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+
+	glDeleteProgram(shader);
 
 	glfwTerminate();
 	return 0;
