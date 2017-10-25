@@ -4,10 +4,8 @@
 #include <chrono>
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
-/// begin experimental
 #include <fstream>
 #include <string>
-/// end experimental
 
 class vec2
 {
@@ -239,18 +237,29 @@ public:
 	}
 	static mat4& transpose(mat4& in)
 	{
+		float tmp = in.elements[1];
 		in.elements[1] = in.elements[4];
-		in.elements[4] = in.elements[1];
+		in.elements[4] = tmp;
+
+		tmp = in.elements[2];
 		in.elements[2] = in.elements[8];
-		in.elements[8] = in.elements[2];
+		in.elements[8] = tmp;
+
+		tmp = in.elements[3];
 		in.elements[3] = in.elements[12];
-		in.elements[12] = in.elements[3];
+		in.elements[12] = tmp;
+
+		tmp = in.elements[6];
 		in.elements[6] = in.elements[9];
-		in.elements[9] = in.elements[6];
+		in.elements[9] = tmp;
+
+		tmp = in.elements[7];
 		in.elements[7] = in.elements[13];
-		in.elements[13] = in.elements[7];
+		in.elements[13] = tmp;
+
+		tmp = in.elements[11];
 		in.elements[11] = in.elements[14];
-		in.elements[14] = in.elements[11];
+		in.elements[14] = tmp;
 	}
 	mat4 ortho(float left, float right, float bottom, float top, float near, float far)
 	{
@@ -369,8 +378,6 @@ public:
 	static const int32_t RoundDown(float in) { return static_cast<int32_t>(in); }
 	static const int32_t RoundUp(float in) { return static_cast<int32_t>(in + 1); }
 
-	// TODO - distance between vectors
-
 	float Lerp(const float a, const float b, float alpha) { return (((1 - alpha) * a) + (alpha * b)); }
 	vec3 Lerp(const vec3& u, const vec3& v, float alpha)
 	{
@@ -425,8 +432,6 @@ uint32_t string_hash(const char* data, uint32_t data_length, const char* salt, u
 
 void HotReload()
 {
-	/// begin experimental
-
 	// create a hash for the name of each variable you want to be able to hotswap
 	uint32_t health = 100;
 	uint32_t health_hash = string_hash("health", 7, "Normalish", 10);
@@ -505,7 +510,6 @@ void HotReload()
 	{
 		std::cout << "Failed to read file!\n";
 	}
-	/// end experimental
 }
 
 static uint32_t CompileShader(uint32_t type, const char* source)
@@ -594,7 +598,7 @@ int32_t main()
 		"layout(location = 0) out vec4 color;\n"
 		"void main()\n"
 		"{\n"
-		"color = vec4(1.f, 0.f, 0.f, 1.f);\n"
+		"color = vec4(0.7f, 0.f, 1.f, 1.f);\n"
 		"}";
 	uint32_t shader = CreateShader(vertex_shader, fragment_shader);
 	glUseProgram(shader);
