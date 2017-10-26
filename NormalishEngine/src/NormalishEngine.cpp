@@ -452,15 +452,15 @@ uint32_t string_hash(const char* data, uint32_t data_length, const char* salt, u
 template<typename T>
 void AddVar(uint32_t name_hash, T* var_ptr)
 {
-	if (typeid(*T) == typeid(float) && bool_find(hot_reload_floats.begin(), hot_reload_floats.end(), var_ptr))
+	if (typeid(*var_ptr) == typeid(float) && bool_find(hot_reload_floats.begin(), hot_reload_floats.end(), var_ptr))
 	{
 		hot_reload_floats.push_back(std::make_tuple(name_hash, var_ptr));
 	}
-	else if (typeid(*T) == typeid(int32_t) && bool_find(hot_reload_ints.begin(), hot_reload_ints.end(), var_ptr))
+	else if (typeid(*var_ptr) == typeid(int32_t) && bool_find(hot_reload_ints.begin(), hot_reload_ints.end(), var_ptr))
 	{
 		hot_reload_ints.push_back(std::make_tuple(name_hash, var_ptr));
 	}
-	else if (typeid(*T) == typeid(bool) && bool_find(hot_reload_bools.begin(), hot_reload_bools.end(), var_ptr))
+	else if (typeid(*var_ptr) == typeid(bool) && bool_find(hot_reload_bools.begin(), hot_reload_bools.end(), var_ptr))
 	{
 		hot_reload_bools.push_back(std::make_tuple(name_hash, var_ptr));
 	}
@@ -468,14 +468,6 @@ void AddVar(uint32_t name_hash, T* var_ptr)
 
 void HotReload()
 {
-	// create a hash for the name of each variable you want to be able to hotswap
-	uint32_t health = 100;
-	uint32_t health_hash = string_hash("health", 7, SALT, SIZE_OF_SALT);
-	float stamina = 32.2f;
-	uint32_t stamina_hash = string_hash("stamina", 8, SALT, SIZE_OF_SALT);
-	uint32_t ammo = 100;
-	uint32_t ammo_hash = string_hash("ammo", 5, SALT, SIZE_OF_SALT);
-
 	std::string line;
 	std::ifstream file("hotreload.txt");
 	if (file.is_open())
@@ -484,13 +476,27 @@ void HotReload()
 		{
 			uint32_t space = line.find(' ');
 			uint32_t name_hash = string_hash(line.substr(0, space).c_str(), space, SALT, SIZE_OF_SALT);
-			// std::string value = 
+			std::string value = line.substr(space);
 
 			for (auto i : hot_reload_floats)
 			{
 				if (std::get<0>(i) == name_hash)
 				{
-					// std::get<1>(i) = 
+					*std::get<1>(i) = std::stof(value);
+				}
+			}
+			for (auto i : hot_reload_ints)
+			{
+				if (std::get<0>(i) == name_hash)
+				{
+					*std::get<1>(i) = std::stoi(value);
+				}
+			}
+			for (auto i : hot_reload_bools)
+			{
+				if (std::get<0>(i) == name_hash)
+				{
+					*std::get<1>(i) = static_cast<bool>(std::stoi(value));
 				}
 			}
 		}
@@ -552,6 +558,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 int32_t main()
 {
+	uint32_t health = 100;
+	uint32_t health_hash = string_hash("health", 7, SALT, SIZE_OF_SALT);
+	AddVar(health_hash, &health);
+	float stamina = 32.2f;
+	uint32_t stamina_hash = string_hash("stamina", 8, SALT, SIZE_OF_SALT);
+	AddVar(stamina_hash, &stamina);
+	uint32_t ammo = 100;
+	uint32_t ammo_hash = string_hash("ammo", 5, SALT, SIZE_OF_SALT);
+	AddVar(ammo_hash, &ammo);
+
 	if (!glfwInit())
 	{
 		return -1;
