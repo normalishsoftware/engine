@@ -6,6 +6,25 @@
 #include <GLFW\glfw3.h>
 #include <fstream>
 #include <string>
+#include <tuple>
+#include <typeinfo>
+
+#define SALT "Normalish"
+#define SIZE_OF_SALT 10
+
+std::vector<std::tuple<uint32_t, int32_t*>> hot_reload_ints(5);
+std::vector<std::tuple<uint32_t, float*>> hot_reload_floats(5);
+std::vector<std::tuple<uint32_t, bool*>> hot_reload_bools(5);
+
+template<class InputIterator, class T>
+bool bool_find(InputIterator first, InputIterator last, const T& val)
+{
+	while (first != last) {
+		if (*first == val) return true;
+		++first;
+	}
+	return false;
+}
 
 class vec2
 {
@@ -430,85 +449,55 @@ uint32_t string_hash(const char* data, uint32_t data_length, const char* salt, u
 	return hash;
 }
 
+template<typename T>
+void AddVar(uint32_t name_hash, T* var_ptr)
+{
+	if (typeid(*T) == typeid(float) && bool_find(hot_reload_floats.begin(), hot_reload_floats.end(), var_ptr))
+	{
+		hot_reload_floats.push_back(std::make_tuple(name_hash, var_ptr));
+	}
+	else if (typeid(*T) == typeid(int32_t) && bool_find(hot_reload_ints.begin(), hot_reload_ints.end(), var_ptr))
+	{
+		hot_reload_ints.push_back(std::make_tuple(name_hash, var_ptr));
+	}
+	else if (typeid(*T) == typeid(bool) && bool_find(hot_reload_bools.begin(), hot_reload_bools.end(), var_ptr))
+	{
+		hot_reload_bools.push_back(std::make_tuple(name_hash, var_ptr));
+	}
+}
+
 void HotReload()
 {
 	// create a hash for the name of each variable you want to be able to hotswap
 	uint32_t health = 100;
-	uint32_t health_hash = string_hash("health", 7, "Normalish", 10);
+	uint32_t health_hash = string_hash("health", 7, SALT, SIZE_OF_SALT);
 	float stamina = 32.2f;
-	uint32_t stamina_hash = string_hash("stamina", 8, "Normalish", 10);
+	uint32_t stamina_hash = string_hash("stamina", 8, SALT, SIZE_OF_SALT);
 	uint32_t ammo = 100;
-	uint32_t ammo_hash = string_hash("ammo", 5, "Normalish", 10);
+	uint32_t ammo_hash = string_hash("ammo", 5, SALT, SIZE_OF_SALT);
 
-	// print the values out
-	std::cout << health << '\n';
-	std::cout << stamina << '\n';
-	std::cout << ammo << '\n';
-
-	// command to update the vars, will probably be global
-	const char command[12] = "update vars";
-	uint32_t command_hash = string_hash(command, 12, "Normalish", 10);
-
-	// collect a command input
-	char _command[12];
-	std::cin.getline(_command, 12);
-	uint32_t _command_hash = string_hash(_command, 12, "Normalish", 10);
-
-	// if command is correct, load the file
-	if (command_hash == _command_hash)
+	std::string line;
+	std::ifstream file("hotreload.txt");
+	if (file.is_open())
 	{
-		std::string line;
-		std::ifstream file("hotreload.txt");
-		if (file.is_open())
+		while (std::getline(file, line))
 		{
-			uint32_t counter = 0;
-			while (std::getline(file, line))
-			{
-				uint32_t space = line.find(' ');
-				uint32_t space_hash = string_hash(line.substr(0, space).c_str(), space, "Normalish", 10);
-				switch (counter)
-				{
-				case 0:
-					if (space_hash == health_hash)
-					{
-						std::string value = line.substr(space);
-						float _value = std::stof(value);
-						health = _value;
-					}
-					break;
-				case 1:
-					if (space_hash == stamina_hash)
-					{
-						std::string value = line.substr(space);
-						float _value = std::stof(value);
-						stamina = _value;
-					}
-					break;
-				case 2:
-					if (space_hash == ammo_hash)
-					{
-						std::string value = line.substr(space);
-						float _value = std::stof(value);
-						ammo = _value;
-					}
-					break;
-				}
-				counter++;
-			}
+			uint32_t space = line.find(' ');
+			uint32_t name_hash = string_hash(line.substr(0, space).c_str(), space, SALT, SIZE_OF_SALT);
+			// std::string value = 
 
-			// print the new values out
-			std::cout << health << '\n';
-			std::cout << stamina << '\n';
-			std::cout << ammo << '\n';
-		}
-		else
-		{
-			std::cout << "Error could not find file\n";
+			for (auto i : hot_reload_floats)
+			{
+				if (std::get<0>(i) == name_hash)
+				{
+					// std::get<1>(i) = 
+				}
+			}
 		}
 	}
 	else
 	{
-		std::cout << "Failed to read file!\n";
+		std::cout << "Error could not find file\n";
 	}
 }
 
@@ -553,6 +542,14 @@ static uint32_t CreateShader(const char* vertex_shader, const char* fragment_sha
 	return program;
 }
 
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
+{
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, GL_TRUE);
+	else if (key == GLFW_KEY_GRAVE_ACCENT && action == GLFW_PRESS)
+		HotReload();
+}
+
 int32_t main()
 {
 	if (!glfwInit())
@@ -569,6 +566,8 @@ int32_t main()
 	}
 
 	glfwMakeContextCurrent(window);
+	glfwSetKeyCallback(window, key_callback);
+
 	if (glewInit() != GLEW_OK)
 	{
 		return -1;
@@ -605,11 +604,12 @@ int32_t main()
 
 	while (!glfwWindowShouldClose(window))
 	{
+		glfwPollEvents();
+
 		glClear(GL_COLOR_BUFFER_BIT);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		glfwSwapBuffers(window);
-		glfwPollEvents();
 	}
 
 	glDeleteProgram(shader);
