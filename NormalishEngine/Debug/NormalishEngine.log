@@ -1,6 +1,4 @@
 ﻿  NormalishEngine.cpp
-c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(395): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
-c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(401): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
-c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(476): warning C4244: '=': conversion from 'float' to 'uint32_t', possible loss of data
-c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(492): warning C4244: '=': conversion from 'float' to 'uint32_t', possible loss of data
-  NormalishEngine.vcxproj -> C:\Users\Normalish Software\Desktop\engine\Debug\NormalishEngine.exe
+c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(414): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
+c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(420): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
+  NormalishEngine.vcxproj -> C:\Users\Pharaoh Thomas\Desktop\engine\Debug\NormalishEngine.exe
