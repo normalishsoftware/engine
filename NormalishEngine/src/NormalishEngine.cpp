@@ -449,22 +449,8 @@ uint32_t string_hash(const char* data, uint32_t data_length, const char* salt, u
 	return hash;
 }
 
-template<typename T>
-void AddVar(uint32_t name_hash, T* var_ptr)
-{
-	if (typeid(*var_ptr) == typeid(float) && bool_find(hot_reload_floats.begin(), hot_reload_floats.end(), var_ptr))
-	{
-		hot_reload_floats.push_back(std::make_tuple(name_hash, var_ptr));
-	}
-	else if (typeid(*var_ptr) == typeid(int32_t) && bool_find(hot_reload_ints.begin(), hot_reload_ints.end(), var_ptr))
-	{
-		hot_reload_ints.push_back(std::make_tuple(name_hash, var_ptr));
-	}
-	else if (typeid(*var_ptr) == typeid(bool) && bool_find(hot_reload_bools.begin(), hot_reload_bools.end(), var_ptr))
-	{
-		hot_reload_bools.push_back(std::make_tuple(name_hash, var_ptr));
-	}
-}
+void AddVar(uint32_t name_hash, float *var_ptr) { hot_reload_floats.push_back(std::make_tuple(name_hash, var_ptr)); }
+void AddVar(uint32_t name_hash, int32_t *var_ptr) { hot_reload_ints.push_back(std::make_tuple(name_hash, var_ptr)); }
 
 void HotReload()
 {
@@ -483,20 +469,23 @@ void HotReload()
 				if (std::get<0>(i) == name_hash)
 				{
 					*std::get<1>(i) = std::stof(value);
+					std::cout << *std::get<1>(i) << '\n';
 				}
 			}
-			for (auto i : hot_reload_ints)
+			for (auto j : hot_reload_ints)
 			{
-				if (std::get<0>(i) == name_hash)
+				if (std::get<0>(j) == name_hash)
 				{
-					*std::get<1>(i) = std::stoi(value);
+					*std::get<1>(j) = std::stoi(value);
+					std::cout << *std::get<1>(j) << '\n';
 				}
 			}
-			for (auto i : hot_reload_bools)
+			for (auto k : hot_reload_bools)
 			{
-				if (std::get<0>(i) == name_hash)
+				if (std::get<0>(k) == name_hash)
 				{
-					*std::get<1>(i) = static_cast<bool>(std::stoi(value));
+					*std::get<1>(k) = static_cast<bool>(std::stoi(value));
+					std::cout << *std::get<1>(k) << '\n';
 				}
 			}
 		}
@@ -558,15 +547,14 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 int32_t main()
 {
-	uint32_t health = 100;
-	uint32_t health_hash = string_hash("health", 7, SALT, SIZE_OF_SALT);
-	AddVar(health_hash, &health);
+	int32_t health = 100;
+	AddVar(string_hash("health", 7, SALT, SIZE_OF_SALT), &health);
+
 	float stamina = 32.2f;
-	uint32_t stamina_hash = string_hash("stamina", 8, SALT, SIZE_OF_SALT);
-	AddVar(stamina_hash, &stamina);
-	uint32_t ammo = 100;
-	uint32_t ammo_hash = string_hash("ammo", 5, SALT, SIZE_OF_SALT);
-	AddVar(ammo_hash, &ammo);
+	AddVar(string_hash("stamina", 8, SALT, SIZE_OF_SALT), &stamina);
+
+	int32_t ammo = 100;
+	AddVar(string_hash("ammo", 5, SALT, SIZE_OF_SALT), &ammo);
 
 	if (!glfwInit())
 	{

@@ -1,48 +1,4 @@
 ﻿  NormalishEngine.cpp
 c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(414): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
 c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(420): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
-c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(457): error C2664: 'void std::vector<std::tuple<uint32_t,float *>,std::allocator<_Ty>>::push_back(_Ty &&)': cannot convert argument 1 from 'std::tuple<unsigned int,unsigned int *>' to 'const std::tuple<uint32_t,float *> &'
-          with
-          [
-              _Ty=std::tuple<uint32_t,float *>
-          ]
-  c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(457): note: Reason: cannot convert from 'std::tuple<unsigned int,unsigned int *>' to 'const std::tuple<uint32_t,float *>'
-  c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(457): note: No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-  c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(563): note: see reference to function template instantiation 'void AddVar<uint32_t>(uint32_t,T *)' being compiled
-          with
-          [
-              T=uint32_t
-          ]
-c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(461): error C2664: 'void std::vector<std::tuple<uint32_t,int32_t *>,std::allocator<_Ty>>::push_back(_Ty &&)': cannot convert argument 1 from 'std::tuple<unsigned int,unsigned int *>' to 'const std::tuple<uint32_t,int32_t *> &'
-          with
-          [
-              _Ty=std::tuple<uint32_t,int32_t *>
-          ]
-  c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(461): note: Reason: cannot convert from 'std::tuple<unsigned int,unsigned int *>' to 'const std::tuple<uint32_t,int32_t *>'
-  c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(461): note: No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(465): error C2664: 'void std::vector<std::tuple<uint32_t,bool *>,std::allocator<_Ty>>::push_back(_Ty &&)': cannot convert argument 1 from 'std::tuple<unsigned int,unsigned int *>' to 'const std::tuple<uint32_t,bool *> &'
-          with
-          [
-              _Ty=std::tuple<uint32_t,bool *>
-          ]
-  c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(465): note: Reason: cannot convert from 'std::tuple<unsigned int,unsigned int *>' to 'const std::tuple<uint32_t,bool *>'
-  c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(465): note: No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(461): error C2664: 'void std::vector<std::tuple<uint32_t,int32_t *>,std::allocator<_Ty>>::push_back(_Ty &&)': cannot convert argument 1 from 'std::tuple<uint32_t,float *>' to 'const std::tuple<uint32_t,int32_t *> &'
-          with
-          [
-              _Ty=std::tuple<uint32_t,int32_t *>
-          ]
-  c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(461): note: Reason: cannot convert from 'std::tuple<uint32_t,float *>' to 'const std::tuple<uint32_t,int32_t *>'
-  c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(461): note: No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
-  c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(566): note: see reference to function template instantiation 'void AddVar<float>(uint32_t,T *)' being compiled
-          with
-          [
-              T=float
-          ]
-c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(465): error C2664: 'void std::vector<std::tuple<uint32_t,bool *>,std::allocator<_Ty>>::push_back(_Ty &&)': cannot convert argument 1 from 'std::tuple<uint32_t,float *>' to 'const std::tuple<uint32_t,bool *> &'
-          with
-          [
-              _Ty=std::tuple<uint32_t,bool *>
-          ]
-  c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(465): note: Reason: cannot convert from 'std::tuple<uint32_t,float *>' to 'const std::tuple<uint32_t,bool *>'
-  c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(465): note: No user-defined-conversion operator available that can perform this conversion, or the operator cannot be called
+  NormalishEngine.vcxproj -> C:\Users\Pharaoh Thomas\Desktop\engine\Debug\NormalishEngine.exe
