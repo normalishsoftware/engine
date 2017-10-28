@@ -19,10 +19,14 @@ std::vector<std::tuple<uint32_t, bool*>> hot_reload_bools(5);
 template<class InputIterator, class T>
 bool bool_find(InputIterator first, InputIterator last, const T& val)
 {
-	while (first != last) {
-		if (*first == val) return true;
+	while (first != last)
+	{
+		if (*first == val)
+			return true;
+
 		++first;
 	}
+
 	return false;
 }
 
@@ -246,9 +250,8 @@ public:
 			{
 				float sum = 0.f;
 				for (uint32_t e = 0; e < 4; e++)
-				{
 					sum += lhs.elements[cols + (e * 4)] * rhs.elements[e + (rows * 4)];
-				}
+
 				ret.elements[rows + (cols * 4)] = sum;
 			}
 		}
@@ -359,9 +362,8 @@ public:
 	friend mat4& operator+(mat4& lhs, const mat4& rhs)
 	{
 		for (int i = 0; i < 16; i++)
-		{
 			lhs.elements[i] += rhs.elements[i];
-		}
+
 		return lhs;
 	}
 	friend mat4& operator*(mat4& lhs, const mat4& rhs) { return lhs = mat4::multiply(lhs, rhs); }
@@ -467,26 +469,17 @@ void HotReload()
 			for (auto i : hot_reload_floats)
 			{
 				if (std::get<0>(i) == name_hash)
-				{
 					*std::get<1>(i) = std::stof(value);
-					std::cout << *std::get<1>(i) << '\n';
-				}
 			}
 			for (auto j : hot_reload_ints)
 			{
 				if (std::get<0>(j) == name_hash)
-				{
 					*std::get<1>(j) = std::stoi(value);
-					std::cout << *std::get<1>(j) << '\n';
-				}
 			}
 			for (auto k : hot_reload_bools)
 			{
 				if (std::get<0>(k) == name_hash)
-				{
 					*std::get<1>(k) = static_cast<bool>(std::stoi(value));
-					std::cout << *std::get<1>(k) << '\n';
-				}
 			}
 		}
 	}
@@ -547,15 +540,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 int32_t main()
 {
-	int32_t health = 100;
-	AddVar(string_hash("health", 7, SALT, SIZE_OF_SALT), &health);
-
-	float stamina = 32.2f;
-	AddVar(string_hash("stamina", 8, SALT, SIZE_OF_SALT), &stamina);
-
-	int32_t ammo = 100;
-	AddVar(string_hash("ammo", 5, SALT, SIZE_OF_SALT), &ammo);
-
 	if (!glfwInit())
 	{
 		return -1;
