@@ -577,7 +577,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 int32_t main()
 {
-
 	if (!glfwInit())
 	{
 		std::cout << "Failed to init GLFW\n";
