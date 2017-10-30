@@ -5,12 +5,15 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <tuple>
-#include <typeinfo>
 
 #define SALT "Normalish"
 #define SIZE_OF_SALT 10
+// #define SHADER string_hash("#shader", 8, SALT, SIZE_OF_SALT)
+// #define VERTEX_SHADER string_hash("vertex", 7, SALT, SIZE_OF_SALT)
+// #define FRAGMENT_SHADER string_hash("fragment", 8, SALT, SIZE_OF_SALT)
 
 std::vector<std::tuple<uint32_t, int32_t*>> hot_reload_ints(5);
 std::vector<std::tuple<uint32_t, float*>> hot_reload_floats(5);
@@ -453,13 +456,15 @@ uint32_t string_hash(const char* data, uint32_t data_length, const char* salt, u
 
 void AddVar(uint32_t name_hash, float *var_ptr) { hot_reload_floats.push_back(std::make_tuple(name_hash, var_ptr)); }
 void AddVar(uint32_t name_hash, int32_t *var_ptr) { hot_reload_ints.push_back(std::make_tuple(name_hash, var_ptr)); }
+void AddVar(uint32_t name_hash, bool *var_ptr) { hot_reload_bools.push_back(std::make_tuple(name_hash, var_ptr)); }
 
 void HotReload()
 {
-	std::string line;
 	std::ifstream file("hotreload.txt");
+
 	if (file.is_open())
 	{
+		std::string line;
 		while (std::getline(file, line))
 		{
 			uint32_t space = line.find(' ');
@@ -487,6 +492,38 @@ void HotReload()
 	{
 		std::cout << "Error could not find file\n";
 	}
+}
+
+static std::tuple<std::string, std::string> LoadShader(const char* file_path)
+{
+	enum class ShaderType
+	{
+		NONE = -1,
+		VERTEX,
+		FRAGMENT
+	};
+
+	std::ifstream file(file_path);
+	std::stringstream ss[2];
+	ShaderType shader_type = ShaderType::NONE;
+
+	if (file.is_open())
+	{
+		std::string line;
+		while (std::getline(file, line))
+		{
+			if (line.find("#shader") != std::string::npos)
+			{
+				if (line.find("vertex") != std::string::npos)
+					shader_type = ShaderType::VERTEX;
+				else if (line.find("fragment") != std::string::npos)
+					shader_type = ShaderType::FRAGMENT;
+			}
+			else
+				ss[static_cast<int32_t>(shader_type)] << line << '\n';
+		}
+	}
+	return std::make_tuple(ss[0].str(), ss[1].str());
 }
 
 static uint32_t CompileShader(uint32_t type, const char* source)
@@ -540,8 +577,10 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 int32_t main()
 {
+
 	if (!glfwInit())
 	{
+		std::cout << "Failed to init GLFW\n";
 		return -1;
 	}
 
@@ -549,6 +588,7 @@ int32_t main()
 	window = glfwCreateWindow(640, 480, "Normalish", nullptr, nullptr);
 	if (!window)
 	{
+		std::cout << "Failed to create window\n";
 		glfwTerminate();
 		return -1;
 	}
@@ -558,6 +598,7 @@ int32_t main()
 
 	if (glewInit() != GLEW_OK)
 	{
+		std::cout << "Failed to init GLEW\n";
 		return -1;
 	}
 
@@ -573,21 +614,8 @@ int32_t main()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
 
-	const char* vertex_shader =
-		"#version 330 core\n"
-		"layout(location = 0) in vec4 position;\n"
-		"void main()\n"
-		"{\n"
-		"gl_Position = position;\n"
-		"}";
-	const char* fragment_shader =
-		"#version 330 core\n"
-		"layout(location = 0) out vec4 color;\n"
-		"void main()\n"
-		"{\n"
-		"color = vec4(0.7f, 0.f, 1.f, 1.f);\n"
-		"}";
-	uint32_t shader = CreateShader(vertex_shader, fragment_shader);
+	auto[vertex_shader, fragment_shader] = LoadShader("basic.shader");
+	uint32_t shader = CreateShader(vertex_shader.c_str(), fragment_shader.c_str());
 	glUseProgram(shader);
 
 	while (!glfwWindowShouldClose(window))
