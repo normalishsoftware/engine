@@ -11,9 +11,6 @@
 
 #define SALT "Normalish"
 #define SIZE_OF_SALT 10
-// #define SHADER string_hash("#shader", 8, SALT, SIZE_OF_SALT)
-// #define VERTEX_SHADER string_hash("vertex", 7, SALT, SIZE_OF_SALT)
-// #define FRAGMENT_SHADER string_hash("fragment", 8, SALT, SIZE_OF_SALT)
 
 std::vector<std::tuple<uint32_t, int32_t*>> hot_reload_ints(5);
 std::vector<std::tuple<uint32_t, float*>> hot_reload_floats(5);
