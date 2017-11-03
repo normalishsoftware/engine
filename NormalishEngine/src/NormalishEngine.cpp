@@ -2,12 +2,12 @@
 #include <cstdint>
 #include <random>
 #include <chrono>
-#include <GL\glew.h>
-#include <GLFW\glfw3.h>
 #include <fstream>
 #include <sstream>
 #include <string>
 #include <tuple>
+#include <GL\glew.h>
+#include <GLFW\glfw3.h>
 
 #define SALT "Normalish"
 #define SIZE_OF_SALT 10
