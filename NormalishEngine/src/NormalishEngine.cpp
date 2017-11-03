@@ -491,7 +491,7 @@ void HotReload()
 	}
 }
 
-static std::tuple<std::string, std::string> LoadShader(const char* file_path)
+static void LoadShader(const char* file_path, std::string* vertex_source, std::string* fragment_source)
 {
 	enum class ShaderType
 	{
@@ -520,7 +520,8 @@ static std::tuple<std::string, std::string> LoadShader(const char* file_path)
 				ss[static_cast<int32_t>(shader_type)] << line << '\n';
 		}
 	}
-	return std::make_tuple(ss[0].str(), ss[1].str());
+	*vertex_source = ss[0].str();
+	*fragment_source = ss[1].str();
 }
 
 static uint32_t CompileShader(uint32_t type, const char* source)
@@ -610,7 +611,8 @@ int32_t main()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
 
-	auto[vertex_shader, fragment_shader] = LoadShader("basic.shader");
+	std::string vertex_shader, fragment_shader;
+	LoadShader("basic.shader", &vertex_shader, &fragment_shader);
 	uint32_t shader = CreateShader(vertex_shader.c_str(), fragment_shader.c_str());
 	glUseProgram(shader);
 
