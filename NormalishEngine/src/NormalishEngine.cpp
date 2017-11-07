@@ -600,16 +600,25 @@ int32_t main()
 	}
 
 	float positions[] = { -0.5f, -0.5f,
-						   0.f, 0.5f,
-						   0.5f, -0.5f };
+						   0.5f, -0.5f,
+						   0.5f, 0.5f,
+						   -0.5f, 0.5f };
+
+	uint32_t indices[] = { 0, 1, 2,
+						   2, 3, 0 };
 
 	uint32_t vertex_buffer;
 	glGenBuffers(1, &vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 2 * 6 * sizeof(float), positions, GL_STATIC_DRAW);
 	
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), nullptr);
+
+	uint32_t index_buffer;
+	glGenBuffers(1, &index_buffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 
 	std::string vertex_shader, fragment_shader;
 	LoadShader("basic.shader", &vertex_shader, &fragment_shader);
@@ -621,7 +630,7 @@ int32_t main()
 		glfwPollEvents();
 
 		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 		glfwSwapBuffers(window);
 	}
