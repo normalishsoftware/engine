@@ -1,8 +1,4 @@
 ﻿  NormalishEngine.cpp
-c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(416): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
-c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(422): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
-  LINK : C:\Users\Normalish Software\Desktop\engine\Debug\NormalishEngine.exe not found or not built by the last incremental link; performing full link
-LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
-LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
-glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Users\Normalish Software\Desktop\engine\Debug\vc120.pdb'; linking object as if no debug info
+c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(421): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
+c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(427): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
   NormalishEngine.vcxproj -> C:\Users\Normalish Software\Desktop\engine\Debug\NormalishEngine.exe

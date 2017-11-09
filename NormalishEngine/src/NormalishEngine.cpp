@@ -37,7 +37,9 @@ public:
 	vec2(float in) : x(in), y(in) {}
 	vec2(float x_in, float y_in) : x(x_in), y(y_in) {}
 
-	float DotProduct(vec2 u, vec2 v) { return (u.x * v.x) + (u.y * v.y); }
+	static float DotProduct(vec2 u, vec2 v) { return (u.x * v.x) + (u.y * v.y); }
+	static float Magnitude(const vec2& in) { return sqrtf((in.x * in.x) + (in.y * in.y)); }
+	static vec2 Normalize(vec2& in) { return (in / Magnitude(in)); }
 
 	friend std::ostream& operator<<(std::ostream& stream, const vec2& in)
 	{
@@ -73,17 +75,17 @@ public:
 
 		return rhs;
 	}
-	friend vec2& operator/(const float num, vec2& rhs)
+	friend vec2& operator/(vec2& lhs, const float num)
 	{
-		rhs.x /= num;
-		rhs.y /= num;
+		lhs.x /= num;
+		lhs.y /= num;
 
-		return rhs;
+		return lhs;
 	}
 	friend vec2& operator+=(vec2& lhs, const vec2& rhs) { return lhs = lhs + rhs; }
 	friend vec2& operator-=(vec2& lhs, const vec2& rhs) { return lhs = lhs - rhs; }
 	friend vec2& operator*=(vec2& lhs, const float num) { return lhs = num * lhs; }
-	friend vec2& operator/=(vec2& lhs, const float num) { return lhs = num / lhs; }
+	friend vec2& operator/=(vec2& lhs, const float num) { return lhs = lhs / num; }
 
 public:
 	float x, y;
@@ -96,9 +98,10 @@ public:
 	vec3(float in) : x(in), y(in), z(in) {}
 	vec3(float x_in, float y_in, float z_in) : x(x_in), y(y_in), z(z_in) {}
 
-	float DotProduct(vec3 u, vec3 v) { return (u.x * v.x) + (u.y * v.y) + (u.z * v.z); }
-	vec3 CrossProduct(vec3 u, vec3 v) { return vec3(u.y * v.z - u.z * v.y, u.x * v.z - u.z * v.x, u.x * v.y - u.y * v.x); }
-	float Magnitude(const vec3& in) { return sqrtf((in.x * in.x) + (in.y * in.y) + (in.z * in.z)); }
+	static float DotProduct(vec3 u, vec3 v) { return (u.x * v.x) + (u.y * v.y) + (u.z * v.z); }
+	static vec3 CrossProduct(vec3 u, vec3 v) { return vec3(u.y * v.z - u.z * v.y, u.x * v.z - u.z * v.x, u.x * v.y - u.y * v.x); }
+	static float Magnitude(const vec3& in) { return sqrtf((in.x * in.x) + (in.y * in.y) + (in.z * in.z)); }
+	static vec3 Normalize(vec3& in) { return (in / Magnitude(in)); }
 	
 	friend std::ostream& operator<<(std::ostream& stream, const vec3& in)
 	{
@@ -137,18 +140,18 @@ public:
 
 		return rhs;
 	}
-	friend vec3& operator/(const float num, vec3& rhs)
+	friend vec3& operator/(vec3& lhs, const float num)
 	{
-		rhs.x /= num;
-		rhs.y /= num;
-		rhs.z /= num;
+		lhs.x /= num;
+		lhs.y /= num;
+		lhs.z /= num;
 
-		return rhs;
+		return lhs;
 	}
 	friend vec3& operator+=(vec3& lhs, const vec3& rhs) { return lhs = lhs + rhs; }
 	friend vec3& operator-=(vec3& lhs, const vec3& rhs) { return lhs = lhs - rhs; }
 	friend vec3& operator*=(vec3& lhs, const float num) { return lhs = num * lhs; }
-	friend vec3& operator/=(vec3& lhs, const float num) { return lhs = num / lhs; }
+	friend vec3& operator/=(vec3& lhs, const float num) { return lhs = lhs / num; }
 
 public:
 	float x, y, z;
@@ -163,6 +166,8 @@ public:
 
 	// float DotProduct(vec3 u, vec3 v) { return (u.x * v.x) + (u.y * v.y) + (u.z * v.z); }
 	// vec3 CrossProduct(vec3 u, vec3 v) { return vec3(u.y * v.z - u.z * v.y, u.x * v.z - u.z * v.x, u.x * v.y - u.y * v.x); }
+	static float Magnitude(const vec4& in) { return sqrtf((in.x * in.x) + (in.y * in.y) + (in.z * in.z) + (in.w * in.w)); }
+	static vec4 Normalize(vec4& in) { return (in / Magnitude(in)); }
 
 	friend std::ostream& operator<<(std::ostream& stream, const vec4& in)
 	{
@@ -204,19 +209,19 @@ public:
 
 		return rhs;
 	}
-	friend vec4& operator/(const float num, vec4& rhs)
+	friend vec4& operator/(vec4& lhs, const float num)
 	{
-		rhs.x /= num;
-		rhs.y /= num;
-		rhs.z /= num;
-		rhs.w /= num;
+		lhs.x /= num;
+		lhs.y /= num;
+		lhs.z /= num;
+		lhs.w /= num;
 
-		return rhs;
+		return lhs;
 	}
 	friend vec4& operator+=(vec4& lhs, const vec4& rhs) { return lhs = lhs + rhs; }
 	friend vec4& operator-=(vec4& lhs, const vec4& rhs) { return lhs = lhs - rhs; }
 	friend vec4& operator*=(vec4& lhs, const float num) { return lhs = num * lhs; }
-	friend vec4& operator/=(vec4& lhs, const float num) { return lhs = num / lhs; }
+	friend vec4& operator/=(vec4& lhs, const float num) { return lhs = lhs / num; }
 
 public:
 	float x, y, z, w;
@@ -491,7 +496,7 @@ void HotReload()
 	}
 }
 
-static void LoadShader(const char* file_path, std::string* vertex_source, std::string* fragment_source)
+void LoadShader(const char* file_path, std::string* vertex_source, std::string* fragment_source)
 {
 	enum class ShaderType
 	{
@@ -524,22 +529,23 @@ static void LoadShader(const char* file_path, std::string* vertex_source, std::s
 	*fragment_source = ss[1].str();
 }
 
-static uint32_t CompileShader(uint32_t type, const char* source)
+constexpr uint32_t CompileShader(uint32_t type, const char* source)
 {
 	uint32_t id = glCreateShader(type);
 	glShaderSource(id, 1, &source, nullptr);
 	glCompileShader(id);
 
 	{
-		int32_t result;
+		int32_t result = 0;
 		glGetShaderiv(id, GL_COMPILE_STATUS, &result);
 		if (!result)
 		{
-			int32_t length;
+			int32_t length = 0;
 			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 			char* error = static_cast<char*>(alloca(length * sizeof(char)));
 			glGetShaderInfoLog(id, length, &length, error);
 			std::cout << error << '\n';
+
 			glDeleteShader(id);
 			return 0;
 		}
@@ -548,7 +554,7 @@ static uint32_t CompileShader(uint32_t type, const char* source)
 	return id;
 }
 
-static uint32_t CreateShader(const char* vertex_shader, const char* fragment_shader)
+constexpr uint32_t CreateShader(const char* vertex_shader, const char* fragment_shader)
 {
 	uint32_t program = glCreateProgram();
 	uint32_t vs = CompileShader(GL_VERTEX_SHADER, vertex_shader);
@@ -589,6 +595,10 @@ int32_t main()
 		glfwTerminate();
 		return -1;
 	}
+
+	vec3 position(3.f);
+
+	vec3 other = position / 2.f;
 
 	glfwMakeContextCurrent(window);
 	glfwSetKeyCallback(window, key_callback);
