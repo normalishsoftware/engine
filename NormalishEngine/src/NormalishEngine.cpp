@@ -16,6 +16,8 @@ std::vector<std::tuple<uint32_t, int32_t*>> hot_reload_ints(5);
 std::vector<std::tuple<uint32_t, float*>> hot_reload_floats(5);
 std::vector<std::tuple<uint32_t, bool*>> hot_reload_bools(5);
 
+std::chrono::duration<float> DeltaTime;
+
 template<class InputIterator, class T>
 bool bool_find(InputIterator first, InputIterator last, const T& val)
 {
@@ -637,12 +639,15 @@ int32_t main()
 
 	while (!glfwWindowShouldClose(window))
 	{
+		auto frame_start = std::chrono::high_resolution_clock::now();
 		glfwPollEvents();
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
 
 		glfwSwapBuffers(window);
+		auto frame_end = std::chrono::high_resolution_clock::now();
+		DeltaTime = frame_end - frame_start;
 	}
 
 	glDeleteProgram(shader);
