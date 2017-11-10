@@ -598,10 +598,6 @@ int32_t main()
 		return -1;
 	}
 
-	vec3 position(3.f);
-
-	vec3 other = position / 2.f;
-
 	glfwMakeContextCurrent(window);
 	glfwSetKeyCallback(window, key_callback);
 
@@ -611,13 +607,15 @@ int32_t main()
 		return -1;
 	}
 
-	float positions[] = { -0.5f, -0.5f,
-						   0.5f, -0.5f,
-						   0.5f, 0.5f,
-						   -0.5f, 0.5f };
+	float positions[] = { -0.5f, -0.75f,
+						   0.5f, -0.75f,
+						   0.5f, 0.25f,
+						   -0.5f, 0.25f,
+							0.f, 0.75f };
 
 	uint32_t indices[] = { 0, 1, 2,
-						   2, 3, 0 };
+						   2, 3, 0,
+						   2, 4, 3 };
 
 	uint32_t vertex_buffer;
 	glGenBuffers(1, &vertex_buffer);
@@ -630,7 +628,7 @@ int32_t main()
 	uint32_t index_buffer;
 	glGenBuffers(1, &index_buffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(uint32_t), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 9 * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 
 	std::string vertex_shader, fragment_shader;
 	LoadShader("basic.shader", &vertex_shader, &fragment_shader);
@@ -643,7 +641,7 @@ int32_t main()
 		glfwPollEvents();
 
 		glClear(GL_COLOR_BUFFER_BIT);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, nullptr);
 
 		glfwSwapBuffers(window);
 		auto frame_end = std::chrono::high_resolution_clock::now();
