@@ -600,7 +600,8 @@ int32_t main()
 	}
 
 	GLFWwindow* window;
-	window = glfwCreateWindow(3840 * 2, 2160 * 2, "Normalish", nullptr, nullptr);
+	window = glfwCreateWindow(1920, 1080, "Normalish", glfwGetPrimaryMonitor(), nullptr);
+
 	if (!window)
 	{
 		std::cout << "Failed to create window\n";
@@ -609,6 +610,7 @@ int32_t main()
 	}
 
 	glfwMakeContextCurrent(window);
+	glfwSwapInterval(0);
 	glfwSetKeyCallback(window, key_callback);
 
 	if (glewInit() != GLEW_OK)
@@ -645,7 +647,6 @@ int32_t main()
 	uint32_t shader = CreateShader(vertex_shader.c_str(), fragment_shader.c_str());
 	glUseProgram(shader);
 
-	glfwSwapInterval(0);		/*Vsync control, comment out to turn Vsync on*/
 	while (!glfwWindowShouldClose(window))
 	{
 		auto frame_start = std::chrono::high_resolution_clock::now();
