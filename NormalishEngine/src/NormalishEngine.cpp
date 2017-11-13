@@ -16,6 +16,16 @@ std::vector<std::tuple<uint32_t, int32_t*>> hot_reload_ints(5);
 std::vector<std::tuple<uint32_t, float*>> hot_reload_floats(5);
 std::vector<std::tuple<uint32_t, bool*>> hot_reload_bools(5);
 
+void SlowShitDown()
+{
+	std::vector<float> some_vec;
+
+	for (int i = 0; i < 1000000; i++)
+	{
+		some_vec.push_back(powf(10.f, sqrtf(i)));
+	}
+}
+
 std::chrono::duration<float> DeltaTime;
 
 template<class InputIterator, class T>
@@ -590,7 +600,7 @@ int32_t main()
 	}
 
 	GLFWwindow* window;
-	window = glfwCreateWindow(640, 480, "Normalish", nullptr, nullptr);
+	window = glfwCreateWindow(3840 * 2, 2160 * 2, "Normalish", nullptr, nullptr);
 	if (!window)
 	{
 		std::cout << "Failed to create window\n";
@@ -635,6 +645,7 @@ int32_t main()
 	uint32_t shader = CreateShader(vertex_shader.c_str(), fragment_shader.c_str());
 	glUseProgram(shader);
 
+	glfwSwapInterval(0);		/*Vsync control, comment out to turn Vsync on*/
 	while (!glfwWindowShouldClose(window))
 	{
 		auto frame_start = std::chrono::high_resolution_clock::now();
@@ -646,6 +657,7 @@ int32_t main()
 		glfwSwapBuffers(window);
 		auto frame_end = std::chrono::high_resolution_clock::now();
 		DeltaTime = frame_end - frame_start;
+		std::cout << DeltaTime.count() << '\n';
 	}
 
 	glDeleteProgram(shader);
