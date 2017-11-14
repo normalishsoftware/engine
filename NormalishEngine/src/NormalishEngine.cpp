@@ -16,17 +16,19 @@ std::vector<std::tuple<uint32_t, int32_t*>> hot_reload_ints(5);
 std::vector<std::tuple<uint32_t, float*>> hot_reload_floats(5);
 std::vector<std::tuple<uint32_t, bool*>> hot_reload_bools(5);
 
-void SlowShitDown()
-{
-	std::vector<float> some_vec;
-
-	for (int i = 0; i < 1000000; i++)
-	{
-		some_vec.push_back(powf(10.f, sqrtf(i)));
-	}
-}
-
 std::chrono::duration<float> DeltaTime;
+
+struct ConfigData
+{
+	uint32_t resolution_x;
+	uint32_t resolution_y;
+	uint32_t fullscreen;
+	uint32_t vsync;
+
+	ConfigData() : resolution_x(640), resolution_y(480), fullscreen(0), vsync(0) {}
+};
+
+ConfigData Config;
 
 template<class InputIterator, class T>
 bool bool_find(InputIterator first, InputIterator last, const T& val)
@@ -508,6 +510,36 @@ void HotReload()
 	}
 }
 
+void LoadConfigs()
+{
+	std::ifstream file("config.txt");
+
+	uint32_t resolution_x = string_hash("resolution_x", 13, SALT, SIZE_OF_SALT);
+	uint32_t resolution_y = string_hash("resolution_y", 13, SALT, SIZE_OF_SALT);
+	uint32_t fullscreen = string_hash("fullscreen", 11, SALT, SIZE_OF_SALT);
+	uint32_t vsync = string_hash("fullscreen", 11, SALT, SIZE_OF_SALT);
+
+	if (file.is_open())
+	{
+		std::string line;
+		while (std::getline(file, line))
+		{
+			uint32_t space = line.find(' ');
+			uint32_t name_hash = string_hash(line.substr(0, space).c_str(), space, SALT, SIZE_OF_SALT);
+			std::string value = line.substr(space);
+
+			if (name_hash == resolution_x)
+				Config.resolution_x = std::stoi(value);
+			if (name_hash == resolution_y)
+				Config.resolution_y = std::stoi(value);
+			if (name_hash == fullscreen)
+				Config.fullscreen = std::stoi(value);
+			if (name_hash == vsync)
+				Config.vsync = std::stoi(value);
+		}
+	}
+}
+
 void LoadShader(const char* file_path, std::string* vertex_source, std::string* fragment_source)
 {
 	enum class ShaderType
@@ -593,6 +625,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 int32_t main()
 {
+	LoadConfigs();
+
 	if (!glfwInit())
 	{
 		std::cout << "Failed to init GLFW\n";
@@ -600,7 +634,10 @@ int32_t main()
 	}
 
 	GLFWwindow* window;
-	window = glfwCreateWindow(1920, 1080, "Normalish", glfwGetPrimaryMonitor(), nullptr);
+	if (Config.fullscreen == 0)
+		window = glfwCreateWindow(Config.resolution_x, Config.resolution_y, "Normalish", nullptr, nullptr);
+	else
+		window = glfwCreateWindow(Config.resolution_x, Config.resolution_y, "Normalish", glfwGetPrimaryMonitor(), nullptr);
 
 	if (!window)
 	{
@@ -610,7 +647,7 @@ int32_t main()
 	}
 
 	glfwMakeContextCurrent(window);
-	glfwSwapInterval(0);
+	glfwSwapInterval(Config.vsync);
 	glfwSetKeyCallback(window, key_callback);
 
 	if (glewInit() != GLEW_OK)
