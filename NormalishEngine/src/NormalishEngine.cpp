@@ -690,6 +690,7 @@ int32_t main()
 		glfwPollEvents();
 
 		glClear(GL_COLOR_BUFFER_BIT);
+		glClearColor(0.3f, 0.3f, 0.3f, 1.f);
 		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, nullptr);
 
 		glfwSwapBuffers(window);
