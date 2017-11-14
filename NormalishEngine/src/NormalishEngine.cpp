@@ -689,6 +689,13 @@ int32_t main()
 		auto frame_start = std::chrono::high_resolution_clock::now();
 		glfwPollEvents();
 
+		glUseProgram(shader);
+
+		float time = glfwGetTime();
+		float red = sinf(2* time);
+		int32_t vertex_color_location = glGetUniformLocation(shader, "vertex_color");
+		glUniform4f(vertex_color_location, red, 0.f, 0.f, 1.f);
+
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClearColor(0.3f, 0.3f, 0.3f, 1.f);
 		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, nullptr);
