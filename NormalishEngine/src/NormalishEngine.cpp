@@ -517,7 +517,7 @@ void LoadConfigs()
 	uint32_t resolution_x = string_hash("resolution_x", 13, SALT, SIZE_OF_SALT);
 	uint32_t resolution_y = string_hash("resolution_y", 13, SALT, SIZE_OF_SALT);
 	uint32_t fullscreen = string_hash("fullscreen", 11, SALT, SIZE_OF_SALT);
-	uint32_t vsync = string_hash("fullscreen", 11, SALT, SIZE_OF_SALT);
+	uint32_t vsync = string_hash("vsync", 6, SALT, SIZE_OF_SALT);
 
 	if (file.is_open())
 	{
