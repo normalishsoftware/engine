@@ -12,9 +12,8 @@ void main()
 #version 330 core
 
 layout(location = 0) out vec4 color;
-uniform vec4 vertex_color;
 
 void main()
 {
-	color = vertex_color;
+	color = vec4(1.f, 0.f, 0.f, 1.f);
 }
