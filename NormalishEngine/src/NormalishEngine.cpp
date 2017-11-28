@@ -635,7 +635,7 @@ int32_t main()
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_COMPAT_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	GLFWwindow* window;
 	if (Config.fullscreen == 0)
@@ -668,6 +668,10 @@ int32_t main()
 	uint32_t indices[] = { 0, 1, 2,
 						   2, 3, 0 };
 
+	uint32_t vertex_array;
+	glGenVertexArrays(1, &vertex_array);
+	glBindVertexArray(vertex_array);
+
 	uint32_t vertex_buffer;
 	glGenBuffers(1, &vertex_buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
@@ -686,12 +690,19 @@ int32_t main()
 	uint32_t shader = CreateShader(vertex_shader.c_str(), fragment_shader.c_str());
 	glUseProgram(shader);
 
+	glUseProgram(0);
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		auto frame_start = std::chrono::high_resolution_clock::now();
 		glfwPollEvents();
 
 		glUseProgram(shader);
+		glBindVertexArray(vertex_array);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
 
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClearColor(0.3f, 0.3f, 0.3f, 1.f);
