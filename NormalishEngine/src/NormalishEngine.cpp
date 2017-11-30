@@ -660,10 +660,10 @@ int32_t main()
 		return -1;
 	}
 
-	float positions[] = { -0.5f, -0.5f,
-						   0.5f, -0.5f,
-						   0.5f, 0.5f,
-						   -0.5f, 0.5f };
+	vec2 positions[] = {	vec2(-0.5f, -0.5f),
+							vec2(0.5f, -0.5f),
+							vec2(0.5f, 0.5f),
+							vec2(-0.5f, 0.5f)	};
 
 	uint32_t indices[] = { 0, 1, 2,
 						   2, 3, 0 };
