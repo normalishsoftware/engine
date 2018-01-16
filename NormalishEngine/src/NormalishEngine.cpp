@@ -332,15 +332,13 @@ public:
 
 		return ret;
 	}
-	static mat4 translate(const vec3& translation)
+	static mat4 translate(mat4& original, const vec3& translation)
 	{
-		mat4 ret(1.f);
+		original.elements[12] += translation.x;
+		original.elements[13] += translation.y;
+		original.elements[14] += translation.z;
 
-		ret.elements[12] = translation.x;
-		ret.elements[13] = translation.y;
-		ret.elements[14] = translation.z;
-
-		return ret;
+		return original;
 	}
 	static mat4 rotate(float angle, const vec3& axis)
 	{
@@ -739,8 +737,8 @@ int32_t main()
 		glUseProgram(shader);
 
 		mat4 transform(1.f);
-		transform = mat4::translate(vec3(0.5f, 0.5f, 0.f));
-		transform = mat4::rotate(glfwGetTime(), vec3(0.f, 0.f, 1.f));
+		transform = mat4::translate(transform, vec3(0.5f, 0.5f, 0.f));
+		// transform = mat4::rotate(glfwGetTime(), vec3(0.f, 0.f, 1.f));
 
 		int32_t transform_location = glGetUniformLocation(shader, "_transform");
 		glUniformMatrix4fv(transform_location, 1, GL_FALSE, transform.elements);
