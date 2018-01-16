@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soil2-static-lib", "soil2-static-lib.vcxproj", "{E9D58E1D-2504-4B4A-B238-0B0C5B4A59FB}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soil2-test", "soil2-test.vcxproj", "{1C24ACAC-8983-AF4C-8C98-14C9F57B530C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E9D58E1D-2504-4B4A-B238-0B0C5B4A59FB} = {E9D58E1D-2504-4B4A-B238-0B0C5B4A59FB}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soil2-perf-test", "soil2-perf-test.vcxproj", "{359E6F4D-A9B8-9847-B771-6D140678FC1B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E9D58E1D-2504-4B4A-B238-0B0C5B4A59FB} = {E9D58E1D-2504-4B4A-B238-0B0C5B4A59FB}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		debug|Win32 = debug|Win32
+		release|Win32 = release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E9D58E1D-2504-4B4A-B238-0B0C5B4A59FB}.debug|Win32.ActiveCfg = debug|Win32
+		{E9D58E1D-2504-4B4A-B238-0B0C5B4A59FB}.debug|Win32.Build.0 = debug|Win32
+		{E9D58E1D-2504-4B4A-B238-0B0C5B4A59FB}.release|Win32.ActiveCfg = release|Win32
+		{E9D58E1D-2504-4B4A-B238-0B0C5B4A59FB}.release|Win32.Build.0 = release|Win32
+		{1C24ACAC-8983-AF4C-8C98-14C9F57B530C}.debug|Win32.ActiveCfg = debug|Win32
+		{1C24ACAC-8983-AF4C-8C98-14C9F57B530C}.debug|Win32.Build.0 = debug|Win32
+		{1C24ACAC-8983-AF4C-8C98-14C9F57B530C}.release|Win32.ActiveCfg = release|Win32
+		{1C24ACAC-8983-AF4C-8C98-14C9F57B530C}.release|Win32.Build.0 = release|Win32
+		{359E6F4D-A9B8-9847-B771-6D140678FC1B}.debug|Win32.ActiveCfg = debug|Win32
+		{359E6F4D-A9B8-9847-B771-6D140678FC1B}.debug|Win32.Build.0 = debug|Win32
+		{359E6F4D-A9B8-9847-B771-6D140678FC1B}.release|Win32.ActiveCfg = release|Win32
+		{359E6F4D-A9B8-9847-B771-6D140678FC1B}.release|Win32.Build.0 = release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -76,12 +76,12 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)deps\GLFW\include;$(SolutionDir)deps\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)deps\SOIL2\src\SOIL2\include;$(SolutionDir)deps\GLFW\include;$(SolutionDir)deps\GLEW\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(SolutionDir)deps\GLFW\lib-vc2015;$(SolutionDir)deps\GLEW\lib\Release\Win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>User32.lib;Gdi32.lib;Shell32.lib;glfw3.lib;opengl32.lib;glew32s.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)deps\SOIL2\lib\windows;$(SolutionDir)deps\GLFW\lib-vc2015;$(SolutionDir)deps\GLEW\lib\Release\Win32</AdditionalLibraryDirectories>
+      <AdditionalDependencies>User32.lib;Gdi32.lib;Shell32.lib;glfw3.lib;opengl32.lib;glew32s.lib;soil2-debug.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -99,14 +99,14 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)deps\GLFW\include;$(SolutionDir)deps\GLEW\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)deps\SOIL2\src\SOIL2\include;$(SolutionDir)deps\GLFW\include;$(SolutionDir)deps\GLEW\include</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);GLEW_STATIC</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>$(SolutionDir)deps\GLFW\lib-vc2015;$(SolutionDir)deps\GLEW\lib\Release\Win32</AdditionalLibraryDirectories>
-      <AdditionalDependencies>User32.lib;Gdi32.lib;Shell32.lib;glfw3.lib;opengl32.lib;glew32s.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)deps\SOIL2\lib\windows;$(SolutionDir)deps\GLFW\lib-vc2015;$(SolutionDir)deps\GLEW\lib\Release\Win32</AdditionalLibraryDirectories>
+      <AdditionalDependencies>User32.lib;Gdi32.lib;Shell32.lib;glfw3.lib;opengl32.lib;glew32s.lib;soil2-debug.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -124,10 +124,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\NormalishEngine.cpp" />
-    <ClCompile Include="src\stb_image.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\stb_image.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -8,6 +8,7 @@
 #include <tuple>
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
+#include <SOIL\SOIL2.h>
 
 #define SALT "Normalish"
 #define SIZE_OF_SALT 10
@@ -331,7 +332,7 @@ public:
 
 		return ret;
 	}
-	mat4 translation(const vec3& translation)
+	static mat4 translate(const vec3& translation)
 	{
 		mat4 ret(1.f);
 
@@ -341,7 +342,7 @@ public:
 
 		return ret;
 	}
-	mat4 rotation(float angle, const vec3& axis)
+	static mat4 rotate(float angle, const vec3& axis)
 	{
 		mat4 ret(1.f);
 
@@ -361,7 +362,7 @@ public:
 
 		return ret;
 	}
-	mat4 scale(const vec3& scale)
+	static mat4 scale(const vec3& scale)
 	{
 		mat4 ret(1.f);
 
@@ -636,6 +637,8 @@ int32_t main()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 	GLFWwindow* window;
 	if (Config.fullscreen == 0)
@@ -652,7 +655,8 @@ int32_t main()
 
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(Config.vsync);
-	glfwSetKeyCallback(window, key_callback);
+
+	glewExperimental = true;
 
 	if (glewInit() != GLEW_OK)
 	{
@@ -660,61 +664,103 @@ int32_t main()
 		return -1;
 	}
 
-	vec2 positions[] = {	vec2(-0.5f, -0.5f),
-							vec2(0.5f, -0.5f),
-							vec2(0.5f, 0.5f),
-							vec2(-0.5f, 0.5f)	};
+	glViewport(0, 0, Config.resolution_x, Config.resolution_y);
 
-	uint32_t indices[] = { 0, 1, 2,
-						   2, 3, 0 };
-
-	uint32_t vertex_array;
-	glGenVertexArrays(1, &vertex_array);
-	glBindVertexArray(vertex_array);
-
-	uint32_t vertex_buffer;
-	glGenBuffers(1, &vertex_buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(positions), positions, GL_STATIC_DRAW);
-	
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(vec2), nullptr);
-
-	uint32_t index_buffer;
-	glGenBuffers(1, &index_buffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	std::string vertex_shader, fragment_shader;
 	LoadShader("basic.shader", &vertex_shader, &fragment_shader);
 	uint32_t shader = CreateShader(vertex_shader.c_str(), fragment_shader.c_str());
 	glUseProgram(shader);
 
-	glUseProgram(0);
+	float vertices[] =
+	{
+		0.5f, 0.5f, 0.f,	1.f, 0.f, 0.f,	1.f, 1.f,
+		0.5f, -0.5f, 0.f,	1.f, 0.f, 0.f,	1.f, 0.f,
+		-0.5f, -0.5f, 0.f,	1.f, 0.f, 0.f,	0.f, 0.f,
+		-0.5f, 0.5f, 0.f,	1.f, 0.f, 0.f,	0.f, 1.f
+	};
+
+	uint32_t indices[] =
+	{
+		0, 1, 3,
+		1, 2, 3
+	};
+
+	uint32_t vertex_array, vertex_buffer, element_buffer;
+	glGenVertexArrays(1, &vertex_array);
+	glGenBuffers(1, &vertex_buffer);
+	glGenBuffers(1, &element_buffer);
+
+	glBindVertexArray(vertex_array);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), nullptr);
+	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_TRUE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
+
 	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	uint32_t texture;
+	int32_t tex_width, tex_height;
+	glGenTextures(1, &texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	unsigned char* image = SOIL_load_image("img_mars.jpg", &tex_width, &tex_height, nullptr, SOIL_LOAD_RGBA);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex_width, tex_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	SOIL_free_image_data(image);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	while (!glfwWindowShouldClose(window))
 	{
 		auto frame_start = std::chrono::high_resolution_clock::now();
 		glfwPollEvents();
 
-		glUseProgram(shader);
-		glBindVertexArray(vertex_array);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer);
-
+		glClearColor(0.2f, 0.3f, 0.3f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT);
-		glClearColor(0.3f, 0.3f, 0.3f, 1.f);
-		glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(uint32_t), GL_UNSIGNED_INT, nullptr);
+
+		glUseProgram(shader);
+
+		mat4 transform(1.f);
+		transform = mat4::translate(vec3(0.5f, 0.5f, 0.f));
+		transform = mat4::rotate(glfwGetTime(), vec3(0.f, 0.f, 1.f));
+
+		int32_t transform_location = glGetUniformLocation(shader, "_transform");
+		glUniformMatrix4fv(transform_location, 1, GL_FALSE, transform.elements);
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glUniform1i(glGetUniformLocation(shader, "_texture"), 0);
+
+		glBindVertexArray(vertex_array);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 
 		glfwSwapBuffers(window);
 		auto frame_end = std::chrono::high_resolution_clock::now();
 		DeltaTime = frame_end - frame_start;
 	}
 
-	glDeleteProgram(shader);
-
+	glDeleteVertexArrays(1, &vertex_array);
+	glDeleteBuffers(1, &vertex_buffer);
+	glDeleteBuffers(1, &element_buffer);
 	glfwTerminate();
 	return 0;
 }
