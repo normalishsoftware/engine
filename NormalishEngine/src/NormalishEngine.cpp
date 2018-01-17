@@ -303,32 +303,32 @@ public:
 		in.elements[11] = in.elements[14];
 		in.elements[14] = tmp;
 	}
-	mat4 ortho(float left, float right, float bottom, float top, float near, float far)
+	static mat4 ortho(float left, float right, float bottom, float top, float near, float far)
 	{
 		mat4 ret;
 
-		ret.elements[0] = 2 / (right - left);
-		ret.elements[5] = 2 / (top - bottom);
-		ret.elements[10] = 2 / (near - far);
+		ret.elements[0] = 2.f / (right - left);
+		ret.elements[5] = 2.f / (top - bottom);
+		ret.elements[10] = 2.f / (near - far);
 		ret.elements[12] = (right + left) / (right - left);
 		ret.elements[13] = (top + bottom) / (top - bottom);
 		ret.elements[14] = (far + near) / (far - near);
-		ret.elements[15] = 1;
+		ret.elements[15] = 1.f;
 
 		return ret;
 	}
-	mat4 persp(float fov, float aspect_ratio, float near, float far)
+	static mat4 persp(float fov, float aspect_ratio, float near, float far)
 	{
 		mat4 ret;
 
-		float a = 1 / tanf(fov / 2);
+		float a = 1.f / tanf(0.5f * fov);
 		float b = near - far;
 
 		ret.elements[0] = a / aspect_ratio;
 		ret.elements[5] = a;
 		ret.elements[10] = (far + near) / b;
-		ret.elements[11] = -1;
-		ret.elements[14] = (2 * far * near) / b;
+		ret.elements[11] = -1.f;
+		ret.elements[14] = (2.f * far * near) / b;
 
 		return ret;
 	}
@@ -340,35 +340,31 @@ public:
 
 		return original;
 	}
-	static mat4 rotate(float angle, const vec3& axis)
+	static mat4 rotate(mat4& original, float angle, const vec3& axis)
 	{
-		mat4 ret(1.f);
-
 		float c = cosf(angle);
 		float _c = 1 - c;
 		float s = sinf(angle);
 
-		ret.elements[0] = (axis.x * axis.x * _c) + c;
-		ret.elements[1] = (axis.x * axis.y * _c) + (axis.z * s);
-		ret.elements[2] = (axis.x * axis.z * _c) + (axis.y * s);
-		ret.elements[4] = (axis.x * axis.y * _c) - (axis.z * s);
-		ret.elements[5] = (axis.y * axis.y * _c) + c;
-		ret.elements[6] = (axis.y * axis.z * _c) + (axis.x * s);
-		ret.elements[8] = (axis.x * axis.z * _c) + (axis.y * s);
-		ret.elements[9] = (axis.y * axis.z * _c) - (axis.x * s);
-		ret.elements[10] = (axis.z * axis.z * _c) + c;
+		original.elements[0] = (axis.x * axis.x * _c) + c;
+		original.elements[1] = (axis.x * axis.y * _c) + (axis.z * s);
+		original.elements[2] = (axis.x * axis.z * _c) + (axis.y * s);
+		original.elements[4] = (axis.x * axis.y * _c) - (axis.z * s);
+		original.elements[5] = (axis.y * axis.y * _c) + c;
+		original.elements[6] = (axis.y * axis.z * _c) + (axis.x * s);
+		original.elements[8] = (axis.x * axis.z * _c) + (axis.y * s);
+		original.elements[9] = (axis.y * axis.z * _c) - (axis.x * s);
+		original.elements[10] = (axis.z * axis.z * _c) + c;
 
-		return ret;
+		return original;
 	}
-	static mat4 scale(const vec3& scale)
+	static mat4 scale(mat4& original, const vec3& scale)
 	{
-		mat4 ret(1.f);
+		original.elements[0] *= scale.x;
+		original.elements[5] *= scale.y;
+		original.elements[10] *= scale.z;
 
-		ret.elements[0] = scale.x;
-		ret.elements[5] = scale.y;
-		ret.elements[10] = scale.z;
-
-		return ret;
+		return original;
 	}
 
 	friend std::ostream& operator<<(std::ostream& stream, const mat4& in)
@@ -416,6 +412,9 @@ public:
 
 	static const int32_t RoundDown(float in) { return static_cast<int32_t>(in); }
 	static const int32_t RoundUp(float in) { return static_cast<int32_t>(in + 1); }
+
+	static const float ToRad(float in) { return in * pi / 180.f; }
+	static const float ToDeg(float in) { return in * 180.f / pi; }
 
 	float Lerp(const float a, const float b, float alpha) { return (((1 - alpha) * a) + (alpha * b)); }
 	vec3 Lerp(const vec3& u, const vec3& v, float alpha)
@@ -664,6 +663,7 @@ int32_t main()
 
 	glViewport(0, 0, Config.resolution_x, Config.resolution_y);
 
+	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -674,39 +674,63 @@ int32_t main()
 
 	float vertices[] =
 	{
-		0.5f, 0.5f, 0.f,	1.f, 0.f, 0.f,	1.f, 1.f,
-		0.5f, -0.5f, 0.f,	1.f, 0.f, 0.f,	1.f, 0.f,
-		-0.5f, -0.5f, 0.f,	1.f, 0.f, 0.f,	0.f, 0.f,
-		-0.5f, 0.5f, 0.f,	1.f, 0.f, 0.f,	0.f, 1.f
+		-0.5f, -0.5f, -0.5f,	0.f, 0.f,
+		0.5f, -0.5f, -0.5f,		1.f, 0.f,
+		0.5f, 0.5f, -0.5f,		1.f, 1.f,
+		0.5f, 0.5f, -0.5f,		1.f, 1.f,
+		-0.5f, 0.5f, -0.5f,		0.f, 1.f,
+		-0.5f, -0.5f, -0.5f,	0.f, 0.f,
+
+		-0.5f, -0.5f, 0.5f,		0.f, 0.f,
+		0.5f, -0.5f, 0.5f,		1.f, 0.f,
+		0.5f, 0.5f, 0.5f,		1.f, 1.f,
+		0.5f, 0.5f, 0.5f,		1.f, 1.f,
+		-0.5f, 0.5f, 0.5f,		0.f, 1.f,
+		-0.5f, -0.5f, 0.5f,		0.f, 0.f,
+
+		-0.5f, 0.5f, 0.5f,		1.f, 0.f,
+		-0.5f, 0.5f, -0.5f,		1.f, 1.f,
+		-0.5f, -0.5f, -0.5f,	0.f, 1.f,
+		-0.5f, -0.5f, -0.5f,	0.f, 1.f,
+		-0.5f, -0.5f, 0.5f,		0.f, 0.f,
+		-0.5f, 0.5f, 0.5f,		1.f, 0.f,
+
+		0.5f, 0.5f, 0.5f,		1.f, 0.f,
+		0.5f, 0.5f, -0.5f,		1.f, 1.f,
+		0.5f, -0.5f, -0.5f,		0.f, 1.f,
+		0.5f, -0.5f, -0.5f,		0.f, 1.f,
+		0.5f, -0.5f, 0.5f,		0.f, 0.f,
+		0.5f, 0.5f, 0.5f,		1.f, 0.f,
+
+		-0.5f, -0.5f, -0.5f,	0.f, 1.f,
+		0.5f, -0.5f, -0.5f,		1.f, 1.f,
+		0.5f, -0.5f, 0.5f,		1.f, 0.f,
+		0.5f, -0.5f, 0.5f,		1.f, 0.f,
+		-0.5f, -0.5f, 0.5f,		0.f, 0.f,
+		-0.5f, -0.5f, -0.5f,	0.f, 1.f,
+
+		-0.5f, 0.5f, -0.5f,		0.f, 1.f,
+		0.5f, 0.5f, -0.5f,		1.f, 1.f,
+		0.5f, 0.5f, 0.5f,		1.f, 0.f,
+		0.5f, 0.5f, 0.5f,		1.f, 0.f,
+		-0.5f, 0.5f, 0.5f,		0.f, 0.f,
+		-0.5f, 0.5f, -0.5f,		0.f, 1.f
 	};
 
-	uint32_t indices[] =
-	{
-		0, 1, 3,
-		1, 2, 3
-	};
-
-	uint32_t vertex_array, vertex_buffer, element_buffer;
+	uint32_t vertex_array, vertex_buffer;
 	glGenVertexArrays(1, &vertex_array);
 	glGenBuffers(1, &vertex_buffer);
-	glGenBuffers(1, &element_buffer);
 
 	glBindVertexArray(vertex_array);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, element_buffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), nullptr);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
-
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_TRUE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(0);
 
@@ -720,35 +744,44 @@ int32_t main()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	unsigned char* image = SOIL_load_image("img_mars.jpg", &tex_width, &tex_height, nullptr, SOIL_LOAD_RGBA);
+	unsigned char* image = SOIL_load_image("wood.jpg", &tex_width, &tex_height, nullptr, SOIL_LOAD_RGBA);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex_width, tex_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	mat4 projection;
+	projection = mat4::persp(45.f, (float)Config.resolution_x / (float)Config.resolution_y, 0.1f, 1000.f);
 
 	while (!glfwWindowShouldClose(window))
 	{
 		auto frame_start = std::chrono::high_resolution_clock::now();
 		glfwPollEvents();
 
-		glClearColor(0.2f, 0.3f, 0.3f, 1.f);
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		glUseProgram(shader);
-
-		mat4 transform(1.f);
-		transform = mat4::translate(transform, vec3(0.5f, 0.5f, 0.f));
-		// transform = mat4::rotate(glfwGetTime(), vec3(0.f, 0.f, 1.f));
-
-		int32_t transform_location = glGetUniformLocation(shader, "_transform");
-		glUniformMatrix4fv(transform_location, 1, GL_FALSE, transform.elements);
+		glClearColor(0.6f, 0.f, 0.f, 1.f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glUniform1i(glGetUniformLocation(shader, "_texture"), 0);
 
+		glUseProgram(shader);
+
+		mat4 model(1.f);
+		model = mat4::rotate(model, glfwGetTime(), vec3(0.5f, 1.f, 0.f));
+		mat4 view(1.f);
+		view = mat4::translate(view, vec3(0.f, 0.f, -3.f));
+
+		int32_t model_location = glGetUniformLocation(shader, "model");
+		int32_t view_location = glGetUniformLocation(shader, "view");
+		int32_t projection_location = glGetUniformLocation(shader, "projection");
+
+		glUniformMatrix4fv(model_location, 1, GL_FALSE, model.elements);
+		glUniformMatrix4fv(view_location, 1, GL_FALSE, view.elements);
+		glUniformMatrix4fv(projection_location, 1, GL_FALSE, projection.elements);
+
 		glBindVertexArray(vertex_array);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 
 		glfwSwapBuffers(window);
@@ -758,7 +791,6 @@ int32_t main()
 
 	glDeleteVertexArrays(1, &vertex_array);
 	glDeleteBuffers(1, &vertex_buffer);
-	glDeleteBuffers(1, &element_buffer);
 	glfwTerminate();
 	return 0;
 }
