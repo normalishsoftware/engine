@@ -729,7 +729,7 @@ int32_t main()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_TRUE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	glBindVertexArray(0);
@@ -751,7 +751,7 @@ int32_t main()
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	mat4 projection;
-	projection = mat4::persp(45.f, (float)Config.resolution_x / (float)Config.resolution_y, 0.1f, 1000.f);
+	projection = mat4::persp(math::pi / 4.f, (float)Config.resolution_x / (float)Config.resolution_y, 0.1f, 1000.f);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -768,8 +768,8 @@ int32_t main()
 		glUseProgram(shader);
 
 		mat4 model(1.f);
-		model = mat4::rotate(model, glfwGetTime(), vec3(0.5f, 1.f, 0.f));
 		mat4 view(1.f);
+		model = mat4::rotate(model, glfwGetTime(), vec3(0.5f, 1.f, 0.f));
 		view = mat4::translate(view, vec3(0.f, 0.f, -3.f));
 
 		int32_t model_location = glGetUniformLocation(shader, "model");
