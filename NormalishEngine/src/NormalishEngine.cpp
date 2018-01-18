@@ -9,6 +9,7 @@
 #include <GL\glew.h>
 #include <GLFW\glfw3.h>
 #include <SOIL\SOIL2.h>
+#include <fmod.hpp>
 
 #define SALT "Normalish"
 #define SIZE_OF_SALT 10
@@ -755,10 +756,27 @@ int32_t main()
 	mat4 projection(1.f);
 	projection = mat4::persp(math::pi / 4.f, (float)Config.resolution_x / (float)Config.resolution_y, 0.1f, 1000.f);
 
+	FMOD::System *system;
+	FMOD::System_Create(&system);
+	FMOD_RESULT result = system->init(100, FMOD_INIT_NORMAL, nullptr);
+	if (result != FMOD_OK)
+	{
+		std::cout << "Failed to initialize FMOD\n";
+		return -1;
+	}
+
+	FMOD::Sound *stream;
+	system->createStream("music.wav", FMOD_DEFAULT | FMOD_LOOP_NORMAL, nullptr, &stream);
+
+	FMOD::Channel *channel;
+	system->playSound(stream, nullptr, false, &channel);
+
 	while (!glfwWindowShouldClose(window))
 	{
 		auto frame_start = std::chrono::high_resolution_clock::now();
 		glfwPollEvents();
+
+		system->update();
 
 		glClearColor(0.6f, 0.f, 0.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -793,6 +811,8 @@ int32_t main()
 
 	glDeleteVertexArrays(1, &vertex_array);
 	glDeleteBuffers(1, &vertex_buffer);
+	stream->release();
+	system->release();
 	glfwTerminate();
 	return 0;
 }
