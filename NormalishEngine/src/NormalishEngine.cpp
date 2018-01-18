@@ -343,18 +343,19 @@ public:
 	static mat4 rotate(mat4& original, float angle, const vec3& axis)
 	{
 		float c = cosf(angle);
-		float _c = 1 - c;
+		float _c = 1.f - c;
 		float s = sinf(angle);
 
-		original.elements[0] = (axis.x * axis.x * _c) + c;
-		original.elements[1] = (axis.x * axis.y * _c) + (axis.z * s);
-		original.elements[2] = (axis.x * axis.z * _c) + (axis.y * s);
-		original.elements[4] = (axis.x * axis.y * _c) - (axis.z * s);
-		original.elements[5] = (axis.y * axis.y * _c) + c;
-		original.elements[6] = (axis.y * axis.z * _c) + (axis.x * s);
-		original.elements[8] = (axis.x * axis.z * _c) + (axis.y * s);
-		original.elements[9] = (axis.y * axis.z * _c) - (axis.x * s);
-		original.elements[10] = (axis.z * axis.z * _c) + c;
+		original.elements[0] = axis.x * axis.x * _c + c;
+		original.elements[1] = axis.x * axis.y * _c + axis.z * s;
+		original.elements[2] = axis.x * axis.z * _c - axis.y * s;
+		original.elements[4] = axis.x * axis.y * _c - axis.z * s;
+		original.elements[5] = axis.y * axis.y * _c + c;
+		original.elements[6] = axis.y * axis.z * _c + axis.x * s;
+		original.elements[8] = axis.x * axis.z * _c + axis.y * s;
+		original.elements[9] = axis.y * axis.z * _c - axis.x * s;
+		original.elements[10] = axis.z * axis.z * _c + c;
+		original.elements[15] = 1.f;
 
 		return original;
 	}
@@ -363,6 +364,7 @@ public:
 		original.elements[0] *= scale.x;
 		original.elements[5] *= scale.y;
 		original.elements[10] *= scale.z;
+		original.elements[15] = 1.f;
 
 		return original;
 	}
@@ -750,7 +752,7 @@ int32_t main()
 	SOIL_free_image_data(image);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	mat4 projection;
+	mat4 projection(1.f);
 	projection = mat4::persp(math::pi / 4.f, (float)Config.resolution_x / (float)Config.resolution_y, 0.1f, 1000.f);
 
 	while (!glfwWindowShouldClose(window))
