@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -123,7 +123,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\AudioManager.cpp" />
+    <ClCompile Include="src\Core\Graphics\GraphicsManager.cpp" />
     <ClCompile Include="src\NormalishEngine.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Core\Camera.h" />
+    <ClInclude Include="src\AudioManager.h" />
+    <ClInclude Include="src\Core\Graphics\GraphicsManager.h" />
+    <ClInclude Include="src\Core\Graphics\Shader.h" />
+    <ClInclude Include="src\Debug\Debug.h" />
+    <ClInclude Include="src\Core\mat4.h" />
+    <ClInclude Include="src\Core\NMath.h" />
+    <ClInclude Include="src\Core\vec2.h" />
+    <ClInclude Include="src\Core\vec3.h" />
+    <ClInclude Include="src\Core\vec4.h" />
+    <ClInclude Include="src\Core\Utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
