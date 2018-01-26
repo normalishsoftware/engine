@@ -1,4 +1,4 @@
-resolution_x 1280
-resolution_y 720
+resolution_x 800
+resolution_y 600
 fullscreen 0
 vsync 1

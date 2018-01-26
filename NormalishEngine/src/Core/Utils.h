@@ -43,7 +43,7 @@ uint32_t string_hash(const char* data, uint32_t data_length, const char* salt, u
 	return hash;
 }
 
-void LoadConfigs(ConfigData Config)
+void LoadConfigs(ConfigData& Config)
 {
 	std::ifstream file(".\\res\\config.txt");
 

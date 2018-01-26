@@ -19,13 +19,10 @@
 #define SIZE_OF_SALT 10
 
 std::chrono::duration<float> DeltaTime;
-
-ConfigData Config;
 Debug* debug;
-
-Camera* camera = new Camera(vec3(0.f, 0.f, -10.f));
-float last_x = 1280.f / 2.f;
-float last_y = 720.f / 2.f;
+Camera camera(vec3(0.f, 0.f, -10.f));
+float last_x = 800.f / 2.f;
+float last_y = 600.f / 2.f;
 float first_mouse = true;
 bool keys[1024];
 
@@ -63,26 +60,24 @@ void MouseCallback(GLFWwindow* window, double xPos, double yPos)
 	last_x = xPos;
 	last_y = yPos;
 
-	camera->ProcessMouseMovement(offset_x, offset_y);
+	camera.ProcessMouseMovement(offset_x, offset_y);
 }
 
 void DoMovement()
 {
 	if (keys[GLFW_KEY_W])
-		camera->ProcessKeyboard(CameraMovement::FORWARD, DeltaTime.count());
+		camera.ProcessKeyboard(CameraMovement::FORWARD, DeltaTime.count());
 	if (keys[GLFW_KEY_S])
-		camera->ProcessKeyboard(CameraMovement::BACKWARD, DeltaTime.count());
+		camera.ProcessKeyboard(CameraMovement::BACKWARD, DeltaTime.count());
 	if (keys[GLFW_KEY_A])
-		camera->ProcessKeyboard(CameraMovement::LEFT, DeltaTime.count());
+		camera.ProcessKeyboard(CameraMovement::LEFT, DeltaTime.count());
 	if (keys[GLFW_KEY_D])
-		camera->ProcessKeyboard(CameraMovement::RIGHT, DeltaTime.count());
+		camera.ProcessKeyboard(CameraMovement::RIGHT, DeltaTime.count());
 }
 
 int32_t main()
 {
-	Debug::AddHot(string_hash("camera->position", 17, SALT, SIZE_OF_SALT), &camera->position);
-	std::cout << camera->position << '\n';
-
+	ConfigData Config;
 
 	LoadConfigs(Config);
 
@@ -116,7 +111,7 @@ int32_t main()
 	glfwSetKeyCallback(window, KeyCallback);
 	glfwSetCursorPosCallback(window, MouseCallback);
 
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
 	glewExperimental = true;
 
@@ -248,7 +243,7 @@ int32_t main()
 
 		mat4 model(1.f);
 		mat4 view(1.f);
-		//view = camera->GetViewMatrix();
+		view = camera.GetViewMatrix();
 
 		int32_t model_location = glGetUniformLocation(shader, "model");
 		int32_t view_location = glGetUniformLocation(shader, "view");
@@ -261,9 +256,9 @@ int32_t main()
 		for (uint32_t i = 0; i < 4; i++)
 		{
 			mat4 model(1.f);
-			//model = mat4::translate(model, cube_positions[i]);
+			model = mat4::translate(model, cube_positions[i]);
 			float angle = 20.f * i;
-			//model = mat4::rotate(model, angle, vec3(1.f, 0.3f, 0.5f));
+			model = mat4::rotate(model, angle, vec3(1.f, 0.3f, 0.5f));
 			glUniformMatrix4fv(model_location, 1, GL_FALSE, model.elements);
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
@@ -275,13 +270,10 @@ int32_t main()
 		DeltaTime = frame_end - frame_start;
 	}
 
-	std::cout << camera->position << '\n';
-
 	glDeleteVertexArrays(1, &vertex_array);
 	glDeleteBuffers(1, &vertex_buffer);
 	audio_system->Terminate();
 	delete audio_system;
-	delete camera;
 	glfwTerminate();
 	return 0;
 }

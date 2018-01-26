@@ -5,7 +5,7 @@
 
 #define YAW -90.f
 #define PITCH 0.f
-#define SPEED 60.f
+#define SPEED 6.f
 #define SENSITIVITY 0.25f
 #define FOV 45.f
 
@@ -55,23 +55,24 @@ public:
 
 	mat4 GetViewMatrix()
 	{
-		vec3 const f(vec3::Normalize(this->position - this->front));
-		vec3 const s(vec3::Normalize(vec3::CrossProduct(f, this->up)));
-		vec3 const u(vec3::CrossProduct(s, f));
+		vec3 const f(vec3::Normalize(front));
+		vec3 const s(vec3::Normalize(vec3::CrossProduct(up, f)));
+		vec3 const u(vec3::CrossProduct(f, s));
 
 		mat4 ret(1.f);
+
 		ret.elements[0] = s.x;
 		ret.elements[1] = s.y;
 		ret.elements[2] = s.z;
+		ret.elements[3] = -vec3::DotProduct(s, position);
 		ret.elements[4] = u.x;
 		ret.elements[5] = u.y;
 		ret.elements[6] = u.z;
-		ret.elements[8] = -f.x;
-		ret.elements[9] = -f.y;
-		ret.elements[10] = -f.z;
-		ret.elements[3] = -vec3::DotProduct(s, this->front);
-		ret.elements[7] = -vec3::DotProduct(u, this->front);
-		ret.elements[11] = vec3::DotProduct(f, this->front);
+		ret.elements[7] = -vec3::DotProduct(u, position);
+		ret.elements[8] = f.x;
+		ret.elements[9] = f.y;
+		ret.elements[10] = f.z;
+		ret.elements[11] = -vec3::DotProduct(f, position);
 
 		return ret;
 	}
