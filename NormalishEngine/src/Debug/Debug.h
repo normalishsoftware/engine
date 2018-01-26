@@ -13,7 +13,7 @@
 std::vector<std::tuple<uint32_t, int32_t*>> hot_reload_int(5);
 std::vector<std::tuple<uint32_t, float*>> hot_reload_float(5);
 std::vector<std::tuple<uint32_t, bool*>> hot_reload_bool(5);
-std::vector<std::tuple<uint32_t, vec3*>> hot_reload_vec3(5);
+std::vector<std::tuple<uint32_t, glm::vec3*>> hot_reload_vec3(5);
 
 
 class Debug
@@ -24,7 +24,7 @@ public:
 	static void AddHot(uint32_t name_hash, int32_t* var_ptr) { hot_reload_int.push_back(std::make_tuple(name_hash, var_ptr)); }
 	static void AddHot(uint32_t name_hash, float* var_ptr) { hot_reload_float.push_back(std::make_tuple(name_hash, var_ptr)); }
 	static void AddHot(uint32_t name_hash, bool* var_ptr) { hot_reload_bool.push_back(std::make_tuple(name_hash, var_ptr)); }
-	static void AddHot(uint32_t name_hash, vec3* var_ptr) { hot_reload_vec3.push_back(std::make_tuple(name_hash, var_ptr)); }
+	static void AddHot(uint32_t name_hash, glm::vec3* var_ptr) { hot_reload_vec3.push_back(std::make_tuple(name_hash, var_ptr)); }
 
 	static void HotReload()
 	{
@@ -70,7 +70,7 @@ public:
 								value = value.substr(new_space + 1);
 						}
 
-						*std::get<1>(d) = vec3(vals[0], vals[1], vals[2]);
+						*std::get<1>(d) = glm::vec3(vals[0], vals[1], vals[2]);
 					}
 				}
 

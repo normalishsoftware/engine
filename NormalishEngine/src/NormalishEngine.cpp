@@ -20,7 +20,7 @@
 
 std::chrono::duration<float> DeltaTime;
 Debug* debug;
-Camera camera(vec3(0.f, 0.f, -10.f));
+Camera camera(glm::vec3(0.f, 3.f, 0.f));
 float last_x = 800.f / 2.f;
 float last_y = 600.f / 2.f;
 float first_mouse = true;
@@ -54,8 +54,8 @@ void MouseCallback(GLFWwindow* window, double xPos, double yPos)
 		first_mouse = false;
 	}
 
-	float offset_x = xPos - last_x;
-	float offset_y = last_y - yPos;
+	float offset_x = (float)xPos - last_x;
+	float offset_y = last_y - (float)yPos;
 
 	last_x = xPos;
 	last_y = yPos;
@@ -177,13 +177,12 @@ int32_t main()
 		-0.5f, 0.5f, -0.5f,		0.f, 1.f
 	};
 
-	vec3 cube_positions[] =
+	glm::vec3 cube_positions[] =
 	{
-		vec3(0.f),
-		vec3(2.f, 5.f, -15.f),
-		vec3(-1.5f, -2.1f, -2.5f),
-		vec3(-3.f, 2.f, -12.f),
-		vec3(4.f)
+		glm::vec3(0.f, 0.f, 0.f),
+		glm::vec3(2.f, 5.f, -15.f),
+		glm::vec3(-1.5f, -2.2f, -2.5f),
+		glm::vec3(-3.8f, -2.f, -12.3f),
 	};
 
 	uint32_t vertex_array, vertex_buffer;
@@ -222,13 +221,15 @@ int32_t main()
 	AudioManager* audio_system = new AudioManager();
 	audio_system->Init();
 
-	//audio_system->PlaySound(".\\res\\music.wav", false);
+	audio_system->PlaySound(".\\res\\music.wav", false);
 
 	while (!glfwWindowShouldClose(window))
 	{
 		auto frame_start = std::chrono::high_resolution_clock::now();
 		glfwPollEvents();
 		DoMovement();
+
+		std::cout << camera.pitch << '\n';
 
 		glClearColor(0.6f, 0.f, 0.f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -239,27 +240,27 @@ int32_t main()
 
 		glUseProgram(shader);
 
-		mat4 projection = mat4::persp(NMath::pi / 4.f, (float)Config.resolution_x / (float)Config.resolution_y, 0.1f, 1000.f);
+		glm::mat4 projection = glm::perspective(45.f, (float)Config.resolution_x / (float)Config.resolution_y, 0.1f, 1000.f);
 
-		mat4 model(1.f);
-		mat4 view(1.f);
+		glm::mat4 model;
+		glm::mat4 view;
 		view = camera.GetViewMatrix();
 
 		int32_t model_location = glGetUniformLocation(shader, "model");
 		int32_t view_location = glGetUniformLocation(shader, "view");
 		int32_t projection_location = glGetUniformLocation(shader, "projection");
 
-		glUniformMatrix4fv(view_location, 1, GL_FALSE, view.elements);
-		glUniformMatrix4fv(projection_location, 1, GL_FALSE, projection.elements);
+		glUniformMatrix4fv(view_location, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projection_location, 1, GL_FALSE, glm::value_ptr(projection));
 
 		glBindVertexArray(vertex_array);
 		for (uint32_t i = 0; i < 4; i++)
 		{
-			mat4 model(1.f);
-			model = mat4::translate(model, cube_positions[i]);
+			glm::mat4 model;
+			model = glm::translate(model, cube_positions[i]);
 			float angle = 20.f * i;
-			model = mat4::rotate(model, angle, vec3(1.f, 0.3f, 0.5f));
-			glUniformMatrix4fv(model_location, 1, GL_FALSE, model.elements);
+			model = glm::rotate(model, angle, glm::vec3(1.f, 0.3f, 0.5f));
+			glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(model));
 
 			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
