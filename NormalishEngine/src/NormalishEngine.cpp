@@ -232,14 +232,26 @@ int32_t main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(lighting_shader);
-		int32_t object_color_location = glGetUniformLocation(lighting_shader, "object_color");
-		int32_t light_color_location = glGetUniformLocation(lighting_shader, "light_color");
-		int32_t light_position_location = glGetUniformLocation(lighting_shader, "light_position");
+		int32_t light_position_location = glGetUniformLocation(lighting_shader, "light.position");
 		int32_t view_position_location = glGetUniformLocation(lighting_shader, "view_position");
-		glUniform3f(object_color_location, 0.f, 0.f, 1.f);
-		glUniform3f(light_color_location, 1.f, 1.f, 1.f);
 		glUniform3f(light_position_location, light_position.x, light_position.y, light_position.z);
 		glUniform3f(view_position_location, camera.position.x, camera.position.y, camera.position.z);
+
+		glm::vec3 light_color;
+		light_color.r = sin(glfwGetTime() * 2.f);
+		light_color.g = sin(glfwGetTime() * 0.7f);
+		light_color.b = sin(glfwGetTime() * 1.3f);
+
+		glm::vec3 diffuse_color = light_color * glm::vec3(0.5f);
+		glm::vec3 ambient_color = diffuse_color * glm::vec3(0.2f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "light.ambient"), ambient_color.r, ambient_color.g, ambient_color.b);
+		glUniform3f(glGetUniformLocation(lighting_shader, "light.diffuse"), diffuse_color.r, diffuse_color.g, diffuse_color.b);
+		glUniform3f(glGetUniformLocation(lighting_shader, "light.specular"), 1.f, 1.f, 1.f);
+
+		glUniform3f(glGetUniformLocation(lighting_shader, "material.ambient"), 1.f, 0.5f, 0.31f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "material.diffuse"), 1.f, 0.5f, 0.31f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "material.specular"), 0.5f, 0.5f, 0.5f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "material.shininess"), 32.f);
 
 		glm::mat4 view;
 		view = camera.GetViewMatrix();

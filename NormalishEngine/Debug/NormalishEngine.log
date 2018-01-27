@@ -7,5 +7,8 @@ c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.c
 c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(53): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(60): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
 c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(61): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(273): warning C4305: 'argument': truncation from 'double' to 'float'
+c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(241): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(242): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(243): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(282): warning C4305: 'argument': truncation from 'double' to 'float'
   NormalishEngine.vcxproj -> C:\Users\Normalish Software\Desktop\engine\Debug\NormalishEngine.exe
