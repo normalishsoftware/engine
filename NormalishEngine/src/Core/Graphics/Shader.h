@@ -79,6 +79,8 @@ public:
 		glLinkProgram(program);
 		glValidateProgram(program);
 
+		vertex_shader = nullptr;
+		fragment_shader = nullptr;
 		glDeleteShader(vs);
 		glDeleteShader(fs);
 

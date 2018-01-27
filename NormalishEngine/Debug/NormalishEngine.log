@@ -1,10 +1,11 @@
 ﻿  NormalishEngine.cpp
-c:\users\pharaoh thomas\desktop\engine\normalishengine\src\core\nmath.h(22): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
-c:\users\pharaoh thomas\desktop\engine\normalishengine\src\core\nmath.h(28): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
-c:\users\pharaoh thomas\desktop\engine\normalishengine\src\debug\debug.h(38): warning C4267: 'initializing': conversion from 'size_t' to 'uint8_t', possible loss of data
-c:\users\pharaoh thomas\desktop\engine\normalishengine\src\debug\debug.h(65): warning C4267: 'initializing': conversion from 'size_t' to 'uint8_t', possible loss of data
-c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(52): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(53): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(60): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-c:\users\pharaoh thomas\desktop\engine\normalishengine\src\normalishengine.cpp(61): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  NormalishEngine.vcxproj -> C:\Users\Pharaoh Thomas\Desktop\engine\Debug\NormalishEngine.exe
+c:\users\normalish software\desktop\engine\normalishengine\src\core\nmath.h(22): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
+c:\users\normalish software\desktop\engine\normalishengine\src\core\nmath.h(28): warning C4244: 'argument': conversion from 'std::chrono::system_clock::rep' to 'unsigned int', possible loss of data
+c:\users\normalish software\desktop\engine\normalishengine\src\debug\debug.h(38): warning C4267: 'initializing': conversion from 'size_t' to 'uint8_t', possible loss of data
+c:\users\normalish software\desktop\engine\normalishengine\src\debug\debug.h(65): warning C4267: 'initializing': conversion from 'size_t' to 'uint8_t', possible loss of data
+c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(52): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(53): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(60): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(61): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+c:\users\normalish software\desktop\engine\normalishengine\src\normalishengine.cpp(273): warning C4305: 'argument': truncation from 'double' to 'float'
+  NormalishEngine.vcxproj -> C:\Users\Normalish Software\Desktop\engine\Debug\NormalishEngine.exe

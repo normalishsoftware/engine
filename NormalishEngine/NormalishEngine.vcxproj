@@ -140,6 +140,10 @@
     <ClInclude Include="src\Core\vec4.h" />
     <ClInclude Include="src\Core\Utils.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="res\lamp.shader" />
+    <None Include="res\lighting.shader" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

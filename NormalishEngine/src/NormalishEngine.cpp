@@ -20,7 +20,7 @@
 
 std::chrono::duration<float> DeltaTime;
 Debug* debug;
-Camera camera(glm::vec3(0.f, 3.f, 0.f));
+Camera camera(glm::vec3(0.f, 0.f, 3.f));
 float last_x = 800.f / 2.f;
 float last_y = 600.f / 2.f;
 float first_mouse = true;
@@ -75,11 +75,15 @@ void DoMovement()
 		camera.ProcessKeyboard(CameraMovement::RIGHT, DeltaTime.count());
 }
 
+glm::vec3 light_position(1.2f, 1.f, 2.f);
+
 int32_t main()
 {
 	ConfigData Config;
 
 	LoadConfigs(Config);
+
+	Debug::AddHot(string_hash("camera.position", 16, SALT, SIZE_OF_SALT), &camera.position);
 
 	if (!glfwInit())
 	{
@@ -128,100 +132,95 @@ int32_t main()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	std::string vertex_shader, fragment_shader;
-	Shader::LoadShader(".\\res\\basic.shader", &vertex_shader, &fragment_shader);
-	uint32_t shader = Shader::CreateShader(vertex_shader.c_str(), fragment_shader.c_str());
-	glUseProgram(shader);
+	Shader::LoadShader(".\\res\\lighting.shader", &vertex_shader, &fragment_shader);
+	uint32_t lighting_shader = Shader::CreateShader(vertex_shader.c_str(), fragment_shader.c_str());
+	Shader::LoadShader(".\\res\\lamp.shader", &vertex_shader, &fragment_shader);
+	uint32_t lamp_shader = Shader::CreateShader(vertex_shader.c_str(), fragment_shader.c_str());
 
 	float vertices[] =
 	{
-		-0.5f, -0.5f, -0.5f,	0.f, 0.f,
-		0.5f, -0.5f, -0.5f,		1.f, 0.f,
-		0.5f, 0.5f, -0.5f,		1.f, 1.f,
-		0.5f, 0.5f, -0.5f,		1.f, 1.f,
-		-0.5f, 0.5f, -0.5f,		0.f, 1.f,
-		-0.5f, -0.5f, -0.5f,	0.f, 0.f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
 
-		-0.5f, -0.5f, 0.5f,		0.f, 0.f,
-		0.5f, -0.5f, 0.5f,		1.f, 0.f,
-		0.5f, 0.5f, 0.5f,		1.f, 1.f,
-		0.5f, 0.5f, 0.5f,		1.f, 1.f,
-		-0.5f, 0.5f, 0.5f,		0.f, 1.f,
-		-0.5f, -0.5f, 0.5f,		0.f, 0.f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+		0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
 
-		-0.5f, 0.5f, 0.5f,		1.f, 0.f,
-		-0.5f, 0.5f, -0.5f,		1.f, 1.f,
-		-0.5f, -0.5f, -0.5f,	0.f, 1.f,
-		-0.5f, -0.5f, -0.5f,	0.f, 1.f,
-		-0.5f, -0.5f, 0.5f,		0.f, 0.f,
-		-0.5f, 0.5f, 0.5f,		1.f, 0.f,
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
 
-		0.5f, 0.5f, 0.5f,		1.f, 0.f,
-		0.5f, 0.5f, -0.5f,		1.f, 1.f,
-		0.5f, -0.5f, -0.5f,		0.f, 1.f,
-		0.5f, -0.5f, -0.5f,		0.f, 1.f,
-		0.5f, -0.5f, 0.5f,		0.f, 0.f,
-		0.5f, 0.5f, 0.5f,		1.f, 0.f,
+		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
 
-		-0.5f, -0.5f, -0.5f,	0.f, 1.f,
-		0.5f, -0.5f, -0.5f,		1.f, 1.f,
-		0.5f, -0.5f, 0.5f,		1.f, 0.f,
-		0.5f, -0.5f, 0.5f,		1.f, 0.f,
-		-0.5f, -0.5f, 0.5f,		0.f, 0.f,
-		-0.5f, -0.5f, -0.5f,	0.f, 1.f,
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
 
-		-0.5f, 0.5f, -0.5f,		0.f, 1.f,
-		0.5f, 0.5f, -0.5f,		1.f, 1.f,
-		0.5f, 0.5f, 0.5f,		1.f, 0.f,
-		0.5f, 0.5f, 0.5f,		1.f, 0.f,
-		-0.5f, 0.5f, 0.5f,		0.f, 0.f,
-		-0.5f, 0.5f, -0.5f,		0.f, 1.f
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
 	};
 
-	glm::vec3 cube_positions[] =
-	{
-		glm::vec3(0.f, 0.f, 0.f),
-		glm::vec3(2.f, 5.f, -15.f),
-		glm::vec3(-1.5f, -2.2f, -2.5f),
-		glm::vec3(-3.8f, -2.f, -12.3f),
-	};
-
-	uint32_t vertex_array, vertex_buffer;
-	glGenVertexArrays(1, &vertex_array);
+	uint32_t cube_vertex_array, vertex_buffer;
+	glGenVertexArrays(1, &cube_vertex_array);
 	glGenBuffers(1, &vertex_buffer);
 
-	glBindVertexArray(vertex_array);
+	glBindVertexArray(cube_vertex_array);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), nullptr);
+	// vertex positions
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	// vertex normals
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
 	glBindVertexArray(0);
 
-	uint32_t texture;
-	int32_t tex_width, tex_height;
-	glGenTextures(1, &texture);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	uint32_t light_vertex_array;
+	glGenVertexArrays(1, &light_vertex_array);
+	glGenBuffers(1, &vertex_buffer);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindVertexArray(light_vertex_array);
 
-	unsigned char* image = SOIL_load_image(".\\res\\wood.jpg", &tex_width, &tex_height, nullptr, SOIL_LOAD_RGBA);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex_width, tex_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-	glGenerateMipmap(GL_TEXTURE_2D);
-	SOIL_free_image_data(image);
-	glBindTexture(GL_TEXTURE_2D, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
+	glEnableVertexAttribArray(0);
+
+	glBindVertexArray(0);
 
 	AudioManager* audio_system = new AudioManager();
 	audio_system->Init();
 
-	audio_system->PlaySound(".\\res\\music.wav", false);
+	//audio_system->PlaySound(".\\res\\music.wav", false);
+
+	glm::mat4 projection = glm::perspective(camera.fov, (float)Config.resolution_x / (float)Config.resolution_y, 0.1f, 1000.f);
 
 	while (!glfwWindowShouldClose(window))
 	{
@@ -229,41 +228,49 @@ int32_t main()
 		glfwPollEvents();
 		DoMovement();
 
-		std::cout << camera.pitch << '\n';
-
-		glClearColor(0.6f, 0.f, 0.f, 1.f);
+		glClearColor(0.1f, 0.1f, 0.1f, 1.f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glUniform1i(glGetUniformLocation(shader, "_texture"), 0);
+		glUseProgram(lighting_shader);
+		int32_t object_color_location = glGetUniformLocation(lighting_shader, "object_color");
+		int32_t light_color_location = glGetUniformLocation(lighting_shader, "light_color");
+		int32_t light_position_location = glGetUniformLocation(lighting_shader, "light_position");
+		int32_t view_position_location = glGetUniformLocation(lighting_shader, "view_position");
+		glUniform3f(object_color_location, 0.f, 0.f, 1.f);
+		glUniform3f(light_color_location, 1.f, 1.f, 1.f);
+		glUniform3f(light_position_location, light_position.x, light_position.y, light_position.z);
+		glUniform3f(view_position_location, camera.position.x, camera.position.y, camera.position.z);
 
-		glUseProgram(shader);
-
-		glm::mat4 projection = glm::perspective(45.f, (float)Config.resolution_x / (float)Config.resolution_y, 0.1f, 1000.f);
-
-		glm::mat4 model;
 		glm::mat4 view;
 		view = camera.GetViewMatrix();
-
-		int32_t model_location = glGetUniformLocation(shader, "model");
-		int32_t view_location = glGetUniformLocation(shader, "view");
-		int32_t projection_location = glGetUniformLocation(shader, "projection");
+		int32_t model_location = glGetUniformLocation(lighting_shader, "model");
+		int32_t view_location = glGetUniformLocation(lighting_shader, "view");
+		int32_t projection_location = glGetUniformLocation(lighting_shader, "projection");
 
 		glUniformMatrix4fv(view_location, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projection_location, 1, GL_FALSE, glm::value_ptr(projection));
 
-		glBindVertexArray(vertex_array);
-		for (uint32_t i = 0; i < 4; i++)
-		{
-			glm::mat4 model;
-			model = glm::translate(model, cube_positions[i]);
-			float angle = 20.f * i;
-			model = glm::rotate(model, angle, glm::vec3(1.f, 0.3f, 0.5f));
-			glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(model));
+		glBindVertexArray(cube_vertex_array);
+		glm::mat4 model;
+		glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(model));
+		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
 
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
+		glUseProgram(lamp_shader);
+
+		model_location = glGetUniformLocation(lamp_shader, "model");
+		view_location = glGetUniformLocation(lamp_shader, "view");
+		projection_location = glGetUniformLocation(lamp_shader, "projection");
+
+		glUniformMatrix4fv(view_location, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projection_location, 1, GL_FALSE, glm::value_ptr(projection));
+
+		model = glm::mat4();
+		model = glm::translate(model, light_position);
+		model = glm::scale(model, glm::vec3(0.2));
+		glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(model));
+		glBindVertexArray(light_vertex_array);
+		glDrawArrays(GL_TRIANGLES, 0, 36);
 		glBindVertexArray(0);
 
 		glfwSwapBuffers(window);
@@ -271,7 +278,8 @@ int32_t main()
 		DeltaTime = frame_end - frame_start;
 	}
 
-	glDeleteVertexArrays(1, &vertex_array);
+	glDeleteVertexArrays(1, &cube_vertex_array);
+	glDeleteVertexArrays(1, &light_vertex_array);
 	glDeleteBuffers(1, &vertex_buffer);
 	audio_system->Terminate();
 	delete audio_system;
