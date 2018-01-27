@@ -18,6 +18,7 @@
 #define SALT "Normalish"
 #define SIZE_OF_SALT 10
 
+
 std::chrono::duration<float> DeltaTime;
 Debug* debug;
 Camera camera(glm::vec3(0.f, 0.f, 3.f));
@@ -139,47 +140,70 @@ int32_t main()
 
 	float vertices[] =
 	{
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
+		// Positions            // Normals              // Texture Coords
+		-0.5f, -0.5f, -0.5f,    0.0f,  0.0f, -1.0f,     0.0f,  0.0f,
+		0.5f, -0.5f, -0.5f,     0.0f,  0.0f, -1.0f,     1.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,     0.0f,  0.0f, -1.0f,     1.0f,  1.0f,
+		0.5f,  0.5f, -0.5f,     0.0f,  0.0f, -1.0f,     1.0f,  1.0f,
+		-0.5f,  0.5f, -0.5f,    0.0f,  0.0f, -1.0f,     0.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f,    0.0f,  0.0f, -1.0f,     0.0f,  0.0f,
 
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f,    0.0f,  0.0f,  1.0f,     0.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,     0.0f,  0.0f,  1.0f,     1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,     0.0f,  0.0f,  1.0f,     1.0f,  1.0f,
+		0.5f,  0.5f,  0.5f,     0.0f,  0.0f,  1.0f,  	1.0f,  1.0f,
+		-0.5f,  0.5f,  0.5f,    0.0f,  0.0f,  1.0f,     0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f,    0.0f,  0.0f,  1.0f,     0.0f,  0.0f,
 
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f,    -1.0f,  0.0f,  0.0f,    1.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,    -1.0f,  0.0f,  0.0f,    1.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f,    -1.0f,  0.0f,  0.0f,    0.0f,  1.0f,
+		-0.5f, -0.5f, -0.5f,    -1.0f,  0.0f,  0.0f,    0.0f,  1.0f,
+		-0.5f, -0.5f,  0.5f,    -1.0f,  0.0f,  0.0f,    0.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f,    -1.0f,  0.0f,  0.0f,    1.0f,  0.0f,
 
-		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-		0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,     1.0f,  0.0f,  0.0f,     1.0f,  0.0f,
+		0.5f,  0.5f, -0.5f,     1.0f,  0.0f,  0.0f,     1.0f,  1.0f,
+		0.5f, -0.5f, -0.5f,     1.0f,  0.0f,  0.0f,     0.0f,  1.0f,
+		0.5f, -0.5f, -0.5f,     1.0f,  0.0f,  0.0f,     0.0f,  1.0f,
+		0.5f, -0.5f,  0.5f,     1.0f,  0.0f,  0.0f,     0.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,     1.0f,  0.0f,  0.0f,     1.0f,  0.0f,
 
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-		0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-		0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,    0.0f, -1.0f,  0.0f,     0.0f,  1.0f,
+		0.5f, -0.5f, -0.5f,     0.0f, -1.0f,  0.0f,     1.0f,  1.0f,
+		0.5f, -0.5f,  0.5f,     0.0f, -1.0f,  0.0f,     1.0f,  0.0f,
+		0.5f, -0.5f,  0.5f,     0.0f, -1.0f,  0.0f,     1.0f,  0.0f,
+		-0.5f, -0.5f,  0.5f,    0.0f, -1.0f,  0.0f,     0.0f,  0.0f,
+		-0.5f, -0.5f, -0.5f,    0.0f, -1.0f,  0.0f,     0.0f,  1.0f,
 
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-		0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-		0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
+		-0.5f,  0.5f, -0.5f,    0.0f,  1.0f,  0.0f,     0.0f,  1.0f,
+		0.5f,  0.5f, -0.5f,     0.0f,  1.0f,  0.0f,     1.0f,  1.0f,
+		0.5f,  0.5f,  0.5f,     0.0f,  1.0f,  0.0f,     1.0f,  0.0f,
+		0.5f,  0.5f,  0.5f,     0.0f,  1.0f,  0.0f,     1.0f,  0.0f,
+		-0.5f,  0.5f,  0.5f,    0.0f,  1.0f,  0.0f,     0.0f,  0.0f,
+		-0.5f,  0.5f, -0.5f,    0.0f,  1.0f,  0.0f,     0.0f,  1.0f
+	};
+
+	glm::vec3 cube_positions[] =
+	{
+		glm::vec3(0.0f,   0.0f,   0.0f),
+		glm::vec3(2.0f,   5.0f,   -15.0f),
+		glm::vec3(-1.5f,  -2.2f,  -2.5f),
+		glm::vec3(-3.8f,  -2.0f,  -12.3f),
+		glm::vec3(2.4f,   -0.4f,  -3.5f),
+		glm::vec3(-1.7f,  3.0f,   -7.5f),
+		glm::vec3(1.3f,   -2.0f,  -2.5f),
+		glm::vec3(1.5f,   2.0f,   -2.5f),
+		glm::vec3(1.5f,   0.2f,   -1.5f),
+		glm::vec3(-1.3f,  1.0f,   -1.5f)
+	};
+
+	glm::vec3 point_light_positions[] = 
+	{
+		glm::vec3(0.7f, 0.2f, 2.f),
+		glm::vec3(2.3f, -3.3f, -4.f),
+		glm::vec3(-4.f, 2.f, -12.f),
+		glm::vec3(0.f, 0.f, -3.f)
 	};
 
 	uint32_t cube_vertex_array, vertex_buffer;
@@ -192,12 +216,16 @@ int32_t main()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	// vertex positions
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
 
 	// vertex normals
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+
+	// texture coordinates
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
+	glEnableVertexAttribArray(2);
 
 	glBindVertexArray(0);
 
@@ -210,10 +238,46 @@ int32_t main()
 	glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), nullptr);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), nullptr);
 	glEnableVertexAttribArray(0);
 
 	glBindVertexArray(0);
+
+	uint32_t diffuse_map, specular_map, emission_map;
+	glGenTextures(1, &diffuse_map);
+	glGenTextures(1, &specular_map);
+	glGenTextures(1, &emission_map);
+
+	int32_t texture_width, texture_height;
+	unsigned char* image;
+
+	//diffuse map
+	image = SOIL_load_image(".\\res\\iron-rusted4-basecolor.png", &texture_width, &texture_height, 0, SOIL_LOAD_RGB);
+	glBindTexture(GL_TEXTURE_2D, diffuse_map);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture_width, texture_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	SOIL_free_image_data(image);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+
+	//specular map
+	image = SOIL_load_image(".\\res\\iron-rusted4-metalness.png", &texture_width, &texture_height, 0, SOIL_LOAD_RGB);
+	glBindTexture(GL_TEXTURE_2D, specular_map);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, texture_width, texture_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glGenerateMipmap(GL_TEXTURE_2D);
+	SOIL_free_image_data(image);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glUseProgram(lighting_shader);
+	glUniform1i(glGetUniformLocation(lighting_shader, "material.diffuse"), 0);
+	glUniform1i(glGetUniformLocation(lighting_shader, "material.specular"), 1);
 
 	AudioManager* audio_system = new AudioManager();
 	audio_system->Init();
@@ -232,29 +296,67 @@ int32_t main()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glUseProgram(lighting_shader);
-		int32_t light_position_location = glGetUniformLocation(lighting_shader, "light.position");
 		int32_t view_position_location = glGetUniformLocation(lighting_shader, "view_position");
-		glUniform3f(light_position_location, light_position.x, light_position.y, light_position.z);
 		glUniform3f(view_position_location, camera.position.x, camera.position.y, camera.position.z);
-
-		glm::vec3 light_color;
-		light_color.r = sin(glfwGetTime() * 2.f);
-		light_color.g = sin(glfwGetTime() * 0.7f);
-		light_color.b = sin(glfwGetTime() * 1.3f);
-
-		glm::vec3 diffuse_color = light_color * glm::vec3(0.5f);
-		glm::vec3 ambient_color = diffuse_color * glm::vec3(0.2f);
-		glUniform3f(glGetUniformLocation(lighting_shader, "light.ambient"), ambient_color.r, ambient_color.g, ambient_color.b);
-		glUniform3f(glGetUniformLocation(lighting_shader, "light.diffuse"), diffuse_color.r, diffuse_color.g, diffuse_color.b);
-		glUniform3f(glGetUniformLocation(lighting_shader, "light.specular"), 1.f, 1.f, 1.f);
-
-		glUniform3f(glGetUniformLocation(lighting_shader, "material.ambient"), 1.f, 0.5f, 0.31f);
-		glUniform3f(glGetUniformLocation(lighting_shader, "material.diffuse"), 1.f, 0.5f, 0.31f);
-		glUniform3f(glGetUniformLocation(lighting_shader, "material.specular"), 0.5f, 0.5f, 0.5f);
 		glUniform1f(glGetUniformLocation(lighting_shader, "material.shininess"), 32.f);
+
+		//directional light
+		glUniform3f(glGetUniformLocation(lighting_shader, "directional_light.direction"), -0.2f, -1.f, -0.3f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "directional_light.ambient"), 0.05f, 0.05f, 0.05f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "directional_light.diffuse"), 0.4f, 0.4f, 0.4f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "directional_light.specular"), 0.5f, 0.5f, 0.5f);
+
+		//point light 0
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[0].position"), point_light_positions[0].x, point_light_positions[0].y, point_light_positions[0].z);
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[0].ambient"), 0.05f, 0.05f, 0.05f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[0].diffuse"), 0.8f, 0.8f, 0.8f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[0].specular"), 1.f, 1.f, 1.f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "point_lights[0].constant"), 1.f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "point_lights[0].linear"), 0.09f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "point_lights[0].quadratic"), 0.032f);
+
+		//point light 1
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[1].position"), point_light_positions[1].x, point_light_positions[1].y, point_light_positions[1].z);
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[1].ambient"), 0.05f, 0.05f, 0.05f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[1].diffuse"), 0.8f, 0.8f, 0.8f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[1].specular"), 1.f, 1.f, 1.f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "point_lights[1].constant"), 1.f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "point_lights[1].linear"), 0.09f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "point_lights[1].quadratic"), 0.032f);
+
+		//point light 2
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[2].position"), point_light_positions[2].x, point_light_positions[2].y, point_light_positions[2].z);
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[2].ambient"), 0.05f, 0.05f, 0.05f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[2].diffuse"), 0.8f, 0.8f, 0.8f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[2].specular"), 1.f, 1.f, 1.f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "point_lights[2].constant"), 1.f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "point_lights[2].linear"), 0.09f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "point_lights[2].quadratic"), 0.032f);
+
+		//point light 3
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[3].position"), point_light_positions[3].x, point_light_positions[3].y, point_light_positions[3].z);
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[3].ambient"), 0.05f, 0.05f, 0.05f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[3].diffuse"), 0.8f, 0.8f, 0.8f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "point_lights[3].specular"), 1.f, 1.f, 1.f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "point_lights[3].constant"), 1.f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "point_lights[3].linear"), 0.09f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "point_lights[3].quadratic"), 0.032f);
+
+		//spot light
+		glUniform3f(glGetUniformLocation(lighting_shader, "spot_light.position"), camera.position.x, camera.position.y, camera.position.z);
+		glUniform3f(glGetUniformLocation(lighting_shader, "spot_light.direction"), camera.front.x, camera.front.y, camera.front.z);
+		glUniform3f(glGetUniformLocation(lighting_shader, "spot_light.ambient"), 0.f, 0.f, 0.f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "spot_light.diffuse"), 1.f, 1.f, 1.f);
+		glUniform3f(glGetUniformLocation(lighting_shader, "spot_light.specular"), 1.f, 1.f, 1.f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "spot_light.constant"), 1.f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "spot_light.linear"), 0.09f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "spot_light.quadratic"), 0.032f);
+		glUniform1f(glGetUniformLocation(lighting_shader, "spot_light.cutoff"), cos(glm::radians(12.5f)));
+		glUniform1f(glGetUniformLocation(lighting_shader, "spot_light.outer_cutoff"), cos(glm::radians(15.f)));
 
 		glm::mat4 view;
 		view = camera.GetViewMatrix();
+
 		int32_t model_location = glGetUniformLocation(lighting_shader, "model");
 		int32_t view_location = glGetUniformLocation(lighting_shader, "view");
 		int32_t projection_location = glGetUniformLocation(lighting_shader, "projection");
@@ -262,10 +364,24 @@ int32_t main()
 		glUniformMatrix4fv(view_location, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projection_location, 1, GL_FALSE, glm::value_ptr(projection));
 
-		glBindVertexArray(cube_vertex_array);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, diffuse_map);
+
+		glActiveTexture(GL_TEXTURE1);
+		glBindTexture(GL_TEXTURE_2D, specular_map);
+
 		glm::mat4 model;
-		glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(model));
-		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(cube_vertex_array);
+
+		for (uint32_t i = 0; i < 10; i++)
+		{
+			model = glm::mat4();
+			model = glm::translate(model, cube_positions[i]);
+			float angle = 20.f * i;
+			model = glm::rotate(model, angle, glm::vec3(1.f, 0.3f, 0.5f));
+			glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(model));
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 		glBindVertexArray(0);
 
 		glUseProgram(lamp_shader);
@@ -283,6 +399,17 @@ int32_t main()
 		glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(model));
 		glBindVertexArray(light_vertex_array);
 		glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
+
+		glBindVertexArray(light_vertex_array);
+		for (uint32_t i = 0; i < 4; i++)
+		{
+			model = glm::mat4();
+			model = glm::translate(model, point_light_positions[i]);
+			model = glm::scale(model, glm::vec3(0.2));
+			glUniformMatrix4fv(model_location, 1, GL_FALSE, glm::value_ptr(model));
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		}
 		glBindVertexArray(0);
 
 		glfwSwapBuffers(window);

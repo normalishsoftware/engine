@@ -5,7 +5,7 @@
 
 #define YAW -90.f
 #define PITCH 0.f
-#define SPEED 6.f
+#define SPEED 3.f
 #define SENSITIVITY 0.25f
 #define FOV 45.f
 
